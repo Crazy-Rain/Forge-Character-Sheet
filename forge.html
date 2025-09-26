@@ -16,12 +16,33 @@
     textarea { width:100%; height:220px; }
     .error { color:#f55; font-weight:bold; }
     .row { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .cp-display { font-weight:bold; color:#4af; }
+    .insufficient-cp { color:#f55; }
+    .available-cp { color:#4f4; }
   </style>
 </head>
 <body>
   <h2>🌌 Celestial Forge Perk Selector</h2>
 
   <div id="error-box" class="error"></div>
+
+  <div id="cp-panel" class="panel">
+    <h3>Choice Points (CP) Management</h3>
+    <div class="row">
+      <div>Current CP: <span id="current-cp">0</span></div>
+      <div>Total CP Earned: <span id="total-cp">0</span></div>
+      <div>CP Spent: <span id="spent-cp">0</span></div>
+    </div>
+    <div class="row">
+      <button onclick="addCP()">Add CP</button>
+      <button onclick="subtractCP()">Subtract CP</button>
+      <button onclick="parseAIResponse()">Parse AI Response for CP</button>
+      <button onclick="resetCP()">Reset CP</button>
+    </div>
+    <div class="row">
+      <textarea id="ai-response" placeholder="Paste SillyTavern AI response here to extract CP total..." style="height:80px;"></textarea>
+    </div>
+  </div>
 
   <div id="domain-panel" class="panel">
     <h3>Step 1: Choose a Domain</h3>
@@ -57,6 +78,8 @@
     let perksData = {};
     let currentDomain = null;
     let sheet = [];
+    let currentCP = 0;
+    let totalCP = 0;
 
     async function loadData(){
       try {
@@ -120,12 +143,22 @@
       p.sub_perks.forEach(sp=>{
         const li = document.createElement("li");
         const btn = document.createElement("button");
+        const cost = sp.cost || 0;
+        const canAfford = cost <= currentCP;
+        const costColor = canAfford ? "#4f4" : "#f55";
+        
         btn.textContent = "Select Sub";
         btn.onclick = (ev)=>{
           ev.stopPropagation();           // prevent parent selection
           pickPerk(sp);
         };
-        li.innerHTML = `<b>${sp.name}</b> (${sp.origin||"Unknown"}) [${sp.cost} CP]`;
+        
+        if (!canAfford) {
+          btn.disabled = true;
+          btn.style.opacity = "0.5";
+        }
+        
+        li.innerHTML = `<b>${sp.name}</b> (${sp.origin||"Unknown"}) [<span style="color:${costColor}">${cost} CP</span>]`;
         li.appendChild(document.createTextNode(" "));
         li.appendChild(btn);
         ul.appendChild(li);
@@ -141,7 +174,17 @@
       picks.forEach(p => {
         const div = document.createElement("div");
         div.className = "choice";
-        div.innerHTML = `<b>${p.name}</b> (${p.origin||"Unknown"}) [${p.cost} CP]<br>${p.description}`;
+        const cost = p.cost || 0;
+        const canAfford = cost <= currentCP;
+        const costColor = canAfford ? "#4f4" : "#f55";
+        
+        div.innerHTML = `<b>${p.name}</b> (${p.origin||"Unknown"}) [<span style="color:${costColor}">${cost} CP</span>]<br>${p.description}`;
+        
+        if (!canAfford) {
+          div.style.opacity = "0.6";
+          div.style.border = "1px solid #555";
+        }
+        
         // Show sub-perks (but don't include sub-perks in the random set — they are nested only)
         renderSubPerks(p, div);
         div.onclick = ()=> pickPerk(p);   // picking parent buys parent (and conceptually its whole package)
@@ -150,8 +193,16 @@
     }
 
     function pickPerk(perk){
+      const cost = perk.cost || 0;
+      if (cost > currentCP) {
+        alert(`Insufficient CP! You need ${cost} CP but only have ${currentCP} CP.`);
+        return;
+      }
+      
       sheet.push(perk);
+      currentCP -= cost;
       updateSheet();
+      updateCPDisplay();
       rerollDomains(); // restart cycle after selection
     }
 
@@ -175,30 +226,43 @@
         container.appendChild(div);
       });
       updateExport();
+      updateCPDisplay();
     }
 
     function updateExport(){
-      let txt = "<Sheet>\n<b><center>The Celestial Forge</center></b>\n<hr>\n";
+      let txt = "<sheet>\n<div align=\"center\"> <b>THE CELESTIAL FORGE</b> </div>\n";
       sheet.forEach(p=>{
-        const header = `${p.name} - ${p.origin||"Unknown"} [${p.cost} CP]`;
-        let body = p.description || "";
-        // If sub-perks exist, append a simple list under the description
+        const name = p.name || "Unknown Perk";
+        const source = p.origin || "Unknown";
+        const cost = p.cost || 0;
+        txt += `${name} - ${source} - ${cost}\n`;
+        
+        // If sub-perks exist, list them as well
         if(p.sub_perks && p.sub_perks.length){
-          body += (body ? "<br>" : "") + "<ul>";
           p.sub_perks.forEach(sp=>{
-            body += `<li><b>${sp.name}</b> (${sp.origin||"Unknown"}) [${sp.cost} CP]</li>`;
+            const subName = sp.name || "Unknown Sub-Perk";
+            const subSource = sp.origin || "Unknown";
+            const subCost = sp.cost || 0;
+            txt += `  └ ${subName} - ${subSource} - ${subCost}\n`;
           });
-          body += "</ul>";
         }
-        txt += `<details><summary>${header}</summary>${body}</details>\n`;
       });
-      txt += "<hr>\n</Sheet>";
+      txt += "</sheet>";
       document.getElementById("export").value = txt;
     }
 
     function saveSheet(){ localStorage.setItem("forgeSheet", JSON.stringify(sheet)); }
-    function loadSheet(){ const data = localStorage.getItem("forgeSheet"); if(data){ sheet = JSON.parse(data); updateSheet(); } }
-    function wipeSheet(){ sheet = []; updateSheet(); }
+    function loadSheet(){ 
+      const data = localStorage.getItem("forgeSheet"); 
+      if(data){ 
+        sheet = JSON.parse(data); 
+        updateSheet(); 
+      } 
+    }
+    function wipeSheet(){ 
+      sheet = []; 
+      updateSheet(); 
+    }
 
     function downloadSheet(){
       const blob = new Blob([JSON.stringify(sheet)], {type:'application/json'});
@@ -212,7 +276,101 @@
       URL.revokeObjectURL(url);
     }
 
+    function updateCPDisplay(){
+      const spentCP = sheet.reduce((sum, perk) => sum + (perk.cost || 0), 0);
+      document.getElementById("current-cp").textContent = currentCP;
+      document.getElementById("total-cp").textContent = totalCP;
+      document.getElementById("spent-cp").textContent = spentCP;
+      
+      // Update CP display styling
+      const currentCPElement = document.getElementById("current-cp");
+      currentCPElement.className = currentCP > 0 ? "available-cp" : "insufficient-cp";
+    }
+
+    function addCP(){
+      const amount = parseInt(prompt("How much CP to add?", "100"));
+      if (amount && amount > 0) {
+        currentCP += amount;
+        totalCP += amount;
+        updateCPDisplay();
+        saveCPData();
+      }
+    }
+
+    function subtractCP(){
+      const amount = parseInt(prompt("How much CP to subtract?", "100"));
+      if (amount && amount > 0) {
+        currentCP = Math.max(0, currentCP - amount);
+        updateCPDisplay();
+        saveCPData();
+      }
+    }
+
+    function resetCP(){
+      if (confirm("Reset all CP data? This will set current and total CP to 0.")) {
+        currentCP = 0;
+        totalCP = 0;
+        updateCPDisplay();
+        saveCPData();
+      }
+    }
+
+    function parseAIResponse(){
+      const aiText = document.getElementById("ai-response").value;
+      if (!aiText.trim()) {
+        alert("Please paste an AI response to parse for CP!");
+        return;
+      }
+
+      // Try to extract CP from various patterns in the AI response
+      const cpPatterns = [
+        /(?:current\s+)?(?:choice\s+)?(?:points?|cp)(?:\s*:?\s*)(\d+)/gi,
+        /(\d+)\s*(?:choice\s+)?(?:points?|cp)/gi,
+        /cp\s*(?:total|current|available)?\s*:?\s*(\d+)/gi,
+        /total\s*cp\s*:?\s*(\d+)/gi
+      ];
+
+      let foundCP = null;
+      for (const pattern of cpPatterns) {
+        const matches = [...aiText.matchAll(pattern)];
+        if (matches.length > 0) {
+          foundCP = parseInt(matches[matches.length - 1][1]); // Get the last match
+          break;
+        }
+      }
+
+      if (foundCP !== null && foundCP >= 0) {
+        const difference = foundCP - currentCP;
+        currentCP = foundCP;
+        if (difference > 0) {
+          totalCP += difference;
+        }
+        updateCPDisplay();
+        saveCPData();
+        alert(`Found CP: ${foundCP}. Current CP updated!`);
+        document.getElementById("ai-response").value = ""; // Clear the textarea
+      } else {
+        alert("Could not find CP amount in the AI response. Try patterns like 'CP: 500' or '500 Choice Points'");
+      }
+    }
+
+    function saveCPData(){
+      const cpData = { currentCP, totalCP };
+      localStorage.setItem("forgeCPData", JSON.stringify(cpData));
+    }
+
+    function loadCPData(){
+      const data = localStorage.getItem("forgeCPData");
+      if (data) {
+        const cpData = JSON.parse(data);
+        currentCP = cpData.currentCP || 0;
+        totalCP = cpData.totalCP || 0;
+        updateCPDisplay();
+      }
+    }
+
     loadData();
+    loadCPData();
   </script>
 </body>
 </html>
