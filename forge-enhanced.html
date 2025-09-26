@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Celestial Forge Character Sheet - Enhanced</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: linear-gradient(135deg, #0f1419, #1a1a2e); 
+      color: #e0e0e0; 
+      padding: 1rem; 
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    h2 { 
+      margin-top: 0; 
+      color: #4fc3f7;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
+      font-size: 1.8em;
+    }
+    
+    button { 
+      margin: 0.25rem; 
+      padding: 0.75rem 1.25rem; 
+      background: linear-gradient(135deg, #2196f3, #1976d2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    button:hover {
+      background: linear-gradient(135deg, #1976d2, #1565c0);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    
+    .panel { 
+      border: 2px solid #0f3460; 
+      padding: 1.5rem; 
+      margin-bottom: 1.5rem; 
+      border-radius: 12px; 
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .panel h3 {
+      color: #81c784;
+      margin-top: 0;
+      font-size: 1.3em;
+      border-bottom: 2px solid #388e3c;
+      padding-bottom: 8px;
+    }
+    
+    .choices { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+      gap: 1rem; 
+      margin: 1rem 0;
+    }
+    
+    .choice { 
+      cursor: pointer; 
+      padding: 1rem; 
+      border: 2px solid #424242; 
+      border-radius: 10px; 
+      background: linear-gradient(135deg, #303030, #424242);
+      transition: all 0.3s ease;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .choice:hover { 
+      background: linear-gradient(135deg, #424242, #616161);
+      border-color: #4fc3f7;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(79, 195, 247, 0.3);
+    }
+    
+    .choice-title {
+      font-weight: bold;
+      color: #4fc3f7;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+    
+    .choice-origin {
+      color: #81c784;
+      font-size: 0.9em;
+      margin-bottom: 5px;
+    }
+    
+    .choice-cost {
+      color: #ffb74d;
+      font-weight: bold;
+      font-size: 1em;
+      margin-bottom: 8px;
+    }
+    
+    .choice-description {
+      color: #bdbdbd;
+      font-size: 0.85em;
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+    
+    .sheet-entry { 
+      margin-bottom: 1rem; 
+      border-bottom: 2px dashed #424242; 
+      padding-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sheet-entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .sheet-entry-title {
+      font-weight: bold;
+      color: #4fc3f7;
+      font-size: 1.1em;
+    }
+    
+    .sheet-entry-info {
+      color: #81c784;
+      font-size: 0.9em;
+    }
+    
+    .sheet-entry-cost {
+      color: #ffb74d;
+      font-weight: bold;
+    }
+    
+    .sheet-entry-description {
+      color: #e0e0e0;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+    
+    details { 
+      margin-left: 1rem; 
+      margin-top: 0.5rem;
+    }
+    
+    details summary {
+      color: #81c784;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    textarea { 
+      width: 100%; 
+      height: 220px; 
+      background: #1e1e1e;
+      color: #e0e0e0;
+      border: 2px solid #424242;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      resize: vertical;
+    }
+    
+    textarea:focus {
+      border-color: #4fc3f7;
+      outline: none;
+      box-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
+    }
+    
+    .error { 
+      color: #f44336; 
+      font-weight: bold; 
+      background: rgba(244, 67, 54, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #f44336;
+      margin-bottom: 1rem;
+    }
+    
+    .row { 
+      display: flex; 
+      gap: 0.75rem; 
+      flex-wrap: wrap; 
+      align-items: center;
+      margin: 0.5rem 0;
+    }
+    
+    .cp-display { 
+      font-weight: bold; 
+      color: #4fc3f7; 
+      font-size: 1.1em;
+    }
+    
+    .insufficient-cp { 
+      color: #f44336 !important; 
+      text-shadow: 0 0 5px rgba(244, 67, 54, 0.5);
+    }
+    
+    .available-cp { 
+      color: #4caf50 !important; 
+      text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+    
+    .cp-panel-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cp-stat {
+      text-align: center;
+      padding: 0.5rem;
+    }
+    
+    .cp-stat-label {
+      font-size: 0.9em;
+      color: #bdbdbd;
+      margin-bottom: 5px;
+    }
+    
+    .cp-stat-value {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+    
+    /* Enhanced AI Response Integration */
+    .ai-response-panel {
+      background: linear-gradient(135deg, #1a2332, #2d3748);
+      border: 2px solid #4299e1;
+    }
+    
+    .ai-response-panel h3 {
+      color: #4299e1;
+      border-bottom-color: #2b6cb0;
+    }
+    
+    .sillytavern-integration {
+      background: rgba(66, 153, 225, 0.1);
+      border: 1px solid #4299e1;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .sillytavern-integration h4 {
+      color: #4299e1;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .perk-for-ai {
+      background: linear-gradient(135deg, #2d3748, #4a5568);
+      border: 2px solid #4299e1;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .perk-for-ai-header {
+      text-align: center;
+      font-weight: bold;
+      color: #4fc3f7;
+      font-size: 1.2em;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+    }
+    
+    .perk-for-ai-content {
+      color: #e0e0e0;
+      line-height: 1.6;
+    }
+    
+    .perk-for-ai-divider {
+      border: none;
+      border-top: 2px solid #4299e1;
+      margin: 1rem 0;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding: 0.5rem;
+      }
+      
+      .choices {
+        grid-template-columns: 1fr;
+      }
+      
+      .row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .cp-panel-display {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Animation for sheet updates */
+    .sheet-entry {
+      animation: slideInFromBottom 0.3s ease-out;
+    }
+    
+    @keyframes slideInFromBottom {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Special styling for iframe mode */
+    .iframe-mode {
+      padding: 0.5rem;
+    }
+    
+    .iframe-mode h2 {
+      font-size: 1.3em;
+      margin-bottom: 1rem;
+    }
+    
+    .iframe-mode .panel {
+      margin-bottom: 1rem;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>🌌 Celestial Forge Character Sheet</h2>
+
+  <div id="error-box" class="error" style="display: none;"></div>
+
+  <div id="cp-panel" class="panel">
+    <h3>Choice Points (CP) Management</h3>
+    <div class="cp-panel-display">
+      <div class="cp-stat">
+        <div class="cp-stat-label">Current CP</div>
+        <div class="cp-stat-value cp-display" id="current-cp">0</div>
+      </div>
+      <div class="cp-stat">
+        <div class="cp-stat-label">Total Earned</div>
+        <div class="cp-stat-value" id="total-cp">0</div>
+      </div>
+      <div class="cp-stat">
+        <div class="cp-stat-label">CP Spent</div>
+        <div class="cp-stat-value" id="spent-cp">0</div>
+      </div>
+    </div>
+    <div class="row">
+      <button onclick="addCP()">Add CP</button>
+      <button onclick="subtractCP()">Subtract CP</button>
+      <button onclick="parseAIResponse()">Parse AI Response for CP</button>
+      <button onclick="resetCP()">Reset CP</button>
+    </div>
+    <div class="row">
+      <textarea id="ai-response" placeholder="Paste SillyTavern AI response here to extract CP total..." style="height:100px;"></textarea>
+    </div>
+  </div>
+
+  <div id="domain-panel" class="panel">
+    <h3>Step 1: Choose a Domain</h3>
+    <div id="domain-choices" class="choices"></div>
+    <div class="row">
+      <button onclick="rerollDomains()">Reroll Domains</button>
+    </div>
+  </div>
+
+  <div id="perk-panel" class="panel" style="display:none;">
+    <h3>Step 2: Choose a Perk from <span id="selected-domain"></span></h3>
+    <div id="perk-choices" class="choices"></div>
+    <div class="row">
+      <button onclick="rerollPerks()">Reroll Perks</button>
+      <button onclick="backToDomains()">Back to Domains</button>
+    </div>
+  </div>
+
+  <div id="sheet-panel" class="panel">
+    <h3>Celestial Forge Sheet</h3>
+    <div id="sheet"></div>
+    <div class="row">
+      <button onclick="saveSheet()">Save</button>
+      <button onclick="loadSheet()">Load</button>
+      <button onclick="wipeSheet()">Wipe</button>
+      <button onclick="downloadSheet()">Download Sheet as JSON</button>
+    </div>
+    <h4>For SillyTavern Integration:</h4>
+    <div class="sillytavern-integration">
+      <h4>📋 Copy this to insert in AI responses:</h4>
+      <textarea id="export" readonly placeholder="Your selected perks will appear here in the format ready for AI responses..."></textarea>
+      <div class="row">
+        <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button onclick="generatePerkForAI()">Generate Current Perk Display</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Response Preview Panel -->
+  <div id="ai-preview-panel" class="panel ai-response-panel" style="display:none;">
+    <h3>🤖 AI Response Preview</h3>
+    <div id="ai-preview-content" class="perk-for-ai">
+      <div class="perk-for-ai-header">THE CELESTIAL FORGE</div>
+      <div class="perk-for-ai-content" id="ai-preview-text"></div>
+    </div>
+    <div class="row">
+      <button onclick="hideAIPreview()">Close Preview</button>
+      <button onclick="copyAIPreview()">Copy Preview</button>
+    </div>
+  </div>
+
+  <script>
+    let perksData = {};
+    let currentDomain = null;
+    let sheet = [];
+    let currentCP = 0;
+    let totalCP = 0;
+
+    // Check if running in iframe (for SillyTavern integration)
+    const isIframe = window !== window.parent;
+    if (isIframe) {
+      document.body.classList.add('iframe-mode');
+    }
+
+    // Enhanced error handling with better user feedback
+    function showError(message) {
+      const errorBox = document.getElementById("error-box");
+      errorBox.textContent = message;
+      errorBox.style.display = "block";
+      setTimeout(() => {
+        errorBox.style.display = "none";
+      }, 5000);
+    }
+
+    // Enhanced success notifications
+    function showSuccess(message) {
+      // Create a temporary success notification
+      const successBox = document.createElement('div');
+      successBox.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      successBox.textContent = message;
+      document.body.appendChild(successBox);
+      
+      setTimeout(() => {
+        successBox.remove();
+      }, 3000);
+    }
+
+    async function loadData(){
+      try {
+        const res = await fetch("perks.json");
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        perksData = await res.json();
+        console.log("Perks data loaded successfully");
+        rerollDomains();
+        loadCPData();
+        loadSheet();
+      } catch (err) {
+        const errorMsg = "⚠️ Could not load perks.json. Make sure it's in the same folder as this HTML file.";
+        showError(errorMsg);
+        console.error("Error loading perks.json:", err);
+      }
+    }
+
+    function getRandomItems(arr, n){
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, n);
+    }
+
+    function rerollDomains(){
+      if (!perksData || Object.keys(perksData).length === 0) {
+        showError("Perks data not loaded yet. Please wait...");
+        return;
+      }
+      
+      const domains = Object.keys(perksData);
+      const selectedDomains = getRandomItems(domains, 4);
+      const container = document.getElementById("domain-choices");
+      container.innerHTML = "";
+      
+      selectedDomains.forEach(domain => {
+        const div = document.createElement("div");
+        div.className = "choice";
+        div.onclick = () => selectDomain(domain);
+        
+        // Count affordable perks in this domain
+        const domainPerks = perksData[domain] || [];
+        const affordableCount = domainPerks.filter(perk => (perk.cost || 0) <= currentCP).length;
+        
+        div.innerHTML = `
+          <div class="choice-title">${domain}</div>
+          <div class="choice-info">
+            <div class="choice-origin">${domainPerks.length} total perks</div>
+            <div class="choice-cost">${affordableCount} affordable</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      
+      document.getElementById("perk-panel").style.display = "none";
+    }
+
+    function selectDomain(domain){
+      currentDomain = domain;
+      document.getElementById("selected-domain").textContent = domain;
+      rerollPerks();
+      document.getElementById("perk-panel").style.display = "block";
+    }
+
+    function rerollPerks(){
+      if (!currentDomain || !perksData[currentDomain]) return;
+      
+      const domainPerks = perksData[currentDomain];
+      const affordablePerks = domainPerks.filter(perk => (perk.cost || 0) <= currentCP);
+      const selectedPerks = getRandomItems(affordablePerks, 4);
+      
+      const container = document.getElementById("perk-choices");
+      container.innerHTML = "";
+      
+      if (selectedPerks.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #f44336; padding: 2rem;">No affordable perks available in this domain!</div>';
+        return;
+      }
+      
+      selectedPerks.forEach(perk => {
+        const div = document.createElement("div");
+        div.className = "choice";
+        div.onclick = () => pickPerk(perk);
+        
+        const description = (perk.description || "No description available").substring(0, 150);
+        const truncated = perk.description && perk.description.length > 150 ? "..." : "";
+        
+        div.innerHTML = `
+          <div class="choice-title">${perk.name || "Unknown Perk"}</div>
+          <div class="choice-origin">${perk.origin || "Unknown Origin"}</div>
+          <div class="choice-cost">[${perk.cost || 0} CP]</div>
+          <div class="choice-description">${description}${truncated}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function backToDomains(){
+      document.getElementById("perk-panel").style.display = "none";
+      currentDomain = null;
+    }
+
+    function pickPerk(perk){
+      const cost = perk.cost || 0;
+      if (cost > currentCP) {
+        showError(`Insufficient CP! You need ${cost} CP but only have ${currentCP} CP.`);
+        return;
+      }
+      
+      sheet.push(perk);
+      currentCP -= cost;
+      updateSheet();
+      updateCPDisplay();
+      rerollDomains();
+      showSuccess(`Added "${perk.name}" to your sheet!`);
+    }
+
+    function updateSheet(){
+      const container = document.getElementById("sheet");
+      container.innerHTML = "";
+      
+      if (sheet.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #757575; padding: 2rem; font-style: italic;">No perks selected yet</div>';
+        updateExport();
+        return;
+      }
+      
+      sheet.forEach((p, idx) => {
+        const div = document.createElement("div");
+        div.className = "sheet-entry";
+        
+        const name = p.name || "Unknown Perk";
+        const origin = p.origin || "Unknown";
+        const cost = p.cost || 0;
+        const description = p.description || "No description available";
+        
+        div.innerHTML = `
+          <div class="sheet-entry-header">
+            <div>
+              <div class="sheet-entry-title">${name}</div>
+              <div class="sheet-entry-info">${origin} - <span class="sheet-entry-cost">[${cost} CP]</span></div>
+            </div>
+            <button onclick="removePerk(${idx})" style="background: #f44336; border-radius: 50%; width: 30px; height: 30px; border: none; color: white; cursor: pointer;">×</button>
+          </div>
+          <div class="sheet-entry-description">${description}</div>
+        `;
+        
+        // Add sub-perks if they exist
+        if(p.sub_perks && p.sub_perks.length){
+          const detailsDiv = document.createElement("details");
+          detailsDiv.innerHTML = `<summary>Sub-Perks (${p.sub_perks.length})</summary>`;
+          
+          const ul = document.createElement("ul");
+          p.sub_perks.forEach(sp => {
+            const li = document.createElement("li");
+            li.innerHTML = `<b>${sp.name}</b> (${sp.origin||"Unknown"}) [${sp.cost} CP]`;
+            ul.appendChild(li);
+          });
+          detailsDiv.appendChild(ul);
+          div.appendChild(detailsDiv);
+        }
+        
+        container.appendChild(div);
+      });
+      
+      updateExport();
+      updateCPDisplay();
+    }
+
+    function removePerk(index) {
+      if (index >= 0 && index < sheet.length) {
+        const removedPerk = sheet[index];
+        const cost = removedPerk.cost || 0;
+        currentCP += cost;
+        sheet.splice(index, 1);
+        updateSheet();
+        showSuccess(`Removed "${removedPerk.name}" and refunded ${cost} CP`);
+      }
+    }
+
+    function updateExport(){
+      let txt = '<div align="center"> <b>THE CELESTIAL FORGE</b> </div>\n<hr>\n';
+      
+      sheet.forEach(p => {
+        const name = p.name || "Unknown Perk";
+        const origin = p.origin || "Unknown";
+        const cost = p.cost || 0;
+        const description = p.description || "No description available";
+        
+        txt += `[${name}] - ${origin} - ${cost} CP\n`;
+        txt += `${description}\n`;
+        
+        if(p.sub_perks && p.sub_perks.length){
+          p.sub_perks.forEach(sp => {
+            const subName = sp.name || "Unknown Sub-Perk";
+            const subOrigin = sp.origin || "Unknown";
+            const subCost = sp.cost || 0;
+            txt += `  └ ${subName} - ${subOrigin} - ${subCost} CP\n`;
+          });
+        }
+        txt += '<hr>\n';
+      });
+      
+      if (sheet.length > 0) {
+        txt += `Current CP: ${currentCP}\n`;
+        txt += `Perks Selected: ${sheet.length}\n`;
+        txt += '<hr>\n';
+      }
+      
+      document.getElementById("export").value = txt;
+    }
+
+    function generatePerkForAI() {
+      if (sheet.length === 0) {
+        showError("No perks selected to display!");
+        return;
+      }
+      
+      const lastPerk = sheet[sheet.length - 1];
+      const name = lastPerk.name || "Unknown Perk";
+      const origin = lastPerk.origin || "Unknown";
+      const cost = lastPerk.cost || 0;
+      const description = lastPerk.description || "No description available";
+      
+      let aiText = `<div align="center"> <b>THE CELESTIAL FORGE</b> </div>\n<hr>\n`;
+      aiText += `[${name}] - ${origin} - ${cost} CP\n`;
+      aiText += `${description}\n`;
+      aiText += '<hr>\n';
+      aiText += `Current CP: ${currentCP}\n`;
+      aiText += `Total Perks: ${sheet.length}\n`;
+      aiText += '<hr>\n';
+      
+      // Update preview
+      document.getElementById("ai-preview-text").innerHTML = aiText.replace(/\n/g, '<br>');
+      document.getElementById("ai-preview-panel").style.display = "block";
+      
+      showSuccess("AI response preview generated!");
+    }
+
+    function hideAIPreview() {
+      document.getElementById("ai-preview-panel").style.display = "none";
+    }
+
+    function copyAIPreview() {
+      const text = document.getElementById("ai-preview-text").textContent;
+      copyToClipboardHelper(text);
+    }
+
+    function copyToClipboard() {
+      const exportArea = document.getElementById("export");
+      if (!exportArea.value.trim()) {
+        showError("Nothing to copy! Select some perks first.");
+        return;
+      }
+      copyToClipboardHelper(exportArea.value);
+    }
+
+    function copyToClipboardHelper(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          showSuccess("Copied to clipboard!");
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showSuccess("Copied to clipboard!");
+      } catch (err) {
+        showError("Failed to copy. Please copy manually from the text area.");
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function saveSheet(){ 
+      localStorage.setItem("forgeSheet", JSON.stringify(sheet)); 
+      showSuccess("Sheet saved!");
+    }
+    
+    function loadSheet(){ 
+      const data = localStorage.getItem("forgeSheet"); 
+      if(data){ 
+        sheet = JSON.parse(data); 
+        updateSheet(); 
+        showSuccess("Sheet loaded!");
+      } else {
+        showError("No saved sheet found!");
+      }
+    }
+    
+    function wipeSheet(){ 
+      if (confirm("Are you sure you want to clear your entire sheet? This will refund all CP.")) {
+        const refundCP = sheet.reduce((sum, perk) => sum + (perk.cost || 0), 0);
+        currentCP += refundCP;
+        sheet = []; 
+        updateSheet();
+        showSuccess(`Sheet cleared and ${refundCP} CP refunded!`);
+      }
+    }
+
+    function downloadSheet(){
+      const blob = new Blob([JSON.stringify(sheet, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'celestial_forge_sheet.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showSuccess("Sheet downloaded!");
+    }
+
+    function updateCPDisplay(){
+      const spentCP = sheet.reduce((sum, perk) => sum + (perk.cost || 0), 0);
+      document.getElementById("current-cp").textContent = currentCP;
+      document.getElementById("total-cp").textContent = totalCP;
+      document.getElementById("spent-cp").textContent = spentCP;
+      
+      const currentCPElement = document.getElementById("current-cp");
+      currentCPElement.className = currentCP > 0 ? "cp-display available-cp" : "cp-display insufficient-cp";
+    }
+
+    function addCP(){
+      const amount = parseInt(prompt("How much CP to add?", "100"));
+      if (amount && amount > 0) {
+        currentCP += amount;
+        totalCP += amount;
+        updateCPDisplay();
+        saveCPData();
+        showSuccess(`Added ${amount} CP!`);
+      }
+    }
+
+    function subtractCP(){
+      const amount = parseInt(prompt("How much CP to subtract?", "100"));
+      if (amount && amount > 0) {
+        currentCP = Math.max(0, currentCP - amount);
+        updateCPDisplay();
+        saveCPData();
+        showSuccess(`Subtracted ${amount} CP!`);
+      }
+    }
+
+    function resetCP(){
+      if (confirm("Reset all CP data? This will set current and total CP to 0.")) {
+        currentCP = 0;
+        totalCP = 0;
+        updateCPDisplay();
+        saveCPData();
+        showSuccess("CP data reset!");
+      }
+    }
+
+    function parseAIResponse(){
+      const aiText = document.getElementById("ai-response").value;
+      if (!aiText.trim()) {
+        showError("Please paste an AI response to parse for CP!");
+        return;
+      }
+
+      // Enhanced CP patterns with more variations
+      const cpPatterns = [
+        /(?:current\s+)?(?:choice\s+)?(?:points?|cp)(?:\s*:?\s*)(\d+)/gi,
+        /(\d+)\s*(?:choice\s+)?(?:points?|cp)/gi,
+        /cp\s*(?:total|current|available)?\s*:?\s*(\d+)/gi,
+        /total\s*cp\s*:?\s*(\d+)/gi,
+        /remaining\s*(?:cp|choice\s*points?)\s*:?\s*(\d+)/gi,
+        /you\s+(?:now\s+)?have\s+(\d+)\s*(?:cp|choice\s*points?)/gi,
+        /(\d+)\s*(?:cp|choice\s*points?)\s+(?:remaining|left|available)/gi
+      ];
+
+      let foundCP = null;
+      for (const pattern of cpPatterns) {
+        const matches = [...aiText.matchAll(pattern)];
+        if (matches.length > 0) {
+          foundCP = parseInt(matches[matches.length - 1][1]);
+          break;
+        }
+      }
+
+      if (foundCP !== null && foundCP >= 0) {
+        const difference = foundCP - currentCP;
+        currentCP = foundCP;
+        if (difference > 0) {
+          totalCP += difference;
+        }
+        updateCPDisplay();
+        saveCPData();
+        showSuccess(`Found CP: ${foundCP}. Current CP updated!`);
+        document.getElementById("ai-response").value = "";
+      } else {
+        showError("Could not find CP amount in the AI response. Try patterns like 'CP: 500' or '500 Choice Points'");
+      }
+    }
+
+    function saveCPData(){
+      const cpData = { currentCP, totalCP };
+      localStorage.setItem("forgeCPData", JSON.stringify(cpData));
+    }
+
+    function loadCPData(){
+      const data = localStorage.getItem("forgeCPData");
+      if (data) {
+        const cpData = JSON.parse(data);
+        currentCP = cpData.currentCP || 0;
+        totalCP = cpData.totalCP || 0;
+        updateCPDisplay();
+      }
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', loadData);
+
+    // Auto-save data periodically
+    setInterval(() => {
+      saveSheet();
+      saveCPData();
+    }, 30000); // Save every 30 seconds
+
+    // Message API for iframe communication with SillyTavern
+    if (isIframe) {
+      window.addEventListener('message', (event) => {
+        if (event.data.type === 'PARSE_CP') {
+          const foundCP = parseCP(event.data.text);
+          if (foundCP !== null) {
+            updateCP(foundCP);
+            event.source.postMessage({
+              type: 'CP_UPDATED',
+              currentCP: currentCP,
+              totalCP: totalCP
+            }, '*');
+          }
+        }
+        
+        if (event.data.type === 'GET_SHEET_EXPORT') {
+          event.source.postMessage({
+            type: 'SHEET_EXPORT',
+            export: document.getElementById("export").value
+          }, '*');
+        }
+      });
+    }
+
+    // Add CSS animation for success notifications
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
