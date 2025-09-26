@@ -351,6 +351,25 @@
   <h2>🌌 Celestial Forge Character Sheet</h2>
 
   <div id="error-box" class="error" style="display: none;"></div>
+  
+  <div id="data-loading-panel" class="panel" style="display: none;">
+    <h3>⚠️ Perks Data Loading</h3>
+    <p>Having trouble loading perks.json? Try these options:</p>
+    <div class="row">
+      <button onclick="loadData()">🔄 Retry Auto-Load</button>
+      <button onclick="showFileSelector()">📁 Select File Manually</button>
+      <button onclick="showJsonPaster()">📋 Paste JSON Data</button>
+    </div>
+    <div id="file-selector" style="display: none; margin-top: 1rem;">
+      <input type="file" id="perks-file-input" accept=".json" onchange="loadFromFile(this)">
+      <p style="font-size: 0.9em; color: #81c784;">Select your perks.json file from your computer</p>
+    </div>
+    <div id="json-paster" style="display: none; margin-top: 1rem;">
+      <textarea id="json-paste-area" placeholder="Paste perks.json content here..." style="width: 100%; height: 150px; background: #2a2a2a; color: #e0e0e0; border: 1px solid #424242; border-radius: 4px; padding: 0.5rem;"></textarea>
+      <br>
+      <button onclick="loadFromPaste()" style="margin-top: 0.5rem;">Load from Pasted Data</button>
+    </div>
+  </div>
 
   <div id="cp-panel" class="panel">
     <h3>Choice Points (CP) Management</h3>
@@ -478,17 +497,81 @@
 
     async function loadData(){
       try {
+        console.log("Attempting to load perks.json...");
         const res = await fetch("perks.json");
-        if(!res.ok) throw new Error("HTTP " + res.status);
+        if(!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         perksData = await res.json();
         console.log("Perks data loaded successfully");
-        rerollDomains();
-        loadCPData();
-        loadSheet();
+        onDataLoadSuccess();
       } catch (err) {
-        const errorMsg = "⚠️ Could not load perks.json. Make sure it's in the same folder as this HTML file.";
-        showError(errorMsg);
         console.error("Error loading perks.json:", err);
+        handleLoadError(err);
+      }
+    }
+
+    function onDataLoadSuccess() {
+      // Hide loading panel if it was shown
+      document.getElementById("data-loading-panel").style.display = "none";
+      rerollDomains();
+      loadCPData();
+      loadSheet();
+      showSuccess("✅ Perks data loaded successfully!");
+    }
+
+    function handleLoadError(err) {
+      const errorMsg = `⚠️ Could not load perks.json automatically.\nError: ${err.message}\n\nPossible solutions:`;
+      showError(errorMsg);
+      document.getElementById("data-loading-panel").style.display = "block";
+    }
+
+    function showFileSelector() {
+      document.getElementById("file-selector").style.display = "block";
+      document.getElementById("json-paster").style.display = "none";
+    }
+
+    function showJsonPaster() {
+      document.getElementById("json-paster").style.display = "block";
+      document.getElementById("file-selector").style.display = "none";
+    }
+
+    async function loadFromFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      if (!file.name.toLowerCase().endsWith('.json')) {
+        showError("⚠️ Please select a JSON file");
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        perksData = data;
+        console.log("Perks data loaded from file:", file.name);
+        onDataLoadSuccess();
+      } catch (err) {
+        showError(`⚠️ Error reading file: ${err.message}`);
+        console.error("Error loading from file:", err);
+      }
+    }
+
+    function loadFromPaste() {
+      const textarea = document.getElementById("json-paste-area");
+      const jsonText = textarea.value.trim();
+      
+      if (!jsonText) {
+        showError("⚠️ Please paste JSON data first");
+        return;
+      }
+
+      try {
+        const data = JSON.parse(jsonText);
+        perksData = data;
+        console.log("Perks data loaded from pasted content");
+        onDataLoadSuccess();
+      } catch (err) {
+        showError(`⚠️ Invalid JSON data: ${err.message}`);
+        console.error("Error parsing pasted JSON:", err);
       }
     }
 
