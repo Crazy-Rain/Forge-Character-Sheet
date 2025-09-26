@@ -1,0 +1,280 @@
+/* Celestial Forge Extension Styles */
+
+#celestial-forge-panel {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #0f3460;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#celestial-forge-panel h3 {
+    color: #4fc3f7;
+    text-align: center;
+    margin: 0 0 15px 0;
+    font-size: 1.2em;
+    text-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
+}
+
+#celestial-forge-panel h4 {
+    color: #81c784;
+    margin: 15px 0 10px 0;
+    font-size: 1.1em;
+    border-bottom: 2px solid #388e3c;
+    padding-bottom: 5px;
+}
+
+#celestial-forge-panel h5 {
+    color: #ffb74d;
+    margin: 10px 0 5px 0;
+    font-size: 1.0em;
+}
+
+.cf-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cf-cp-display {
+    background: #263238;
+    border: 2px solid #37474f;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cf-cp-display div {
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.cf-available-cp {
+    color: #4caf50 !important;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.cf-insufficient-cp {
+    color: #f44336 !important;
+    text-shadow: 0 0 5px rgba(244, 67, 54, 0.5);
+}
+
+.cf-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.cf-controls button {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.cf-controls button:hover {
+    background: linear-gradient(135deg, #1976d2, #1565c0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.cf-controls button:active {
+    transform: translateY(0);
+}
+
+.cf-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.cf-choice-button {
+    background: linear-gradient(135deg, #424242, #303030);
+    color: #e0e0e0;
+    border: 2px solid #616161;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cf-choice-button:hover {
+    background: linear-gradient(135deg, #616161, #424242);
+    border-color: #4fc3f7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(79, 195, 247, 0.3);
+}
+
+.cf-perk-choice {
+    min-height: 120px;
+}
+
+.cf-perk-name {
+    font-weight: bold;
+    color: #4fc3f7;
+    margin-bottom: 5px;
+}
+
+.cf-perk-origin {
+    color: #81c784;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.cf-perk-cost {
+    color: #ffb74d;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cf-perk-desc {
+    color: #bdbdbd;
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+.cf-sheet-display {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #1e1e1e;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.cf-perk-entry {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.cf-perk-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #4fc3f7;
+    font-weight: bold;
+}
+
+.cf-remove-perk {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.cf-remove-perk:hover {
+    background: #d32f2f;
+    transform: scale(1.1);
+}
+
+.cf-perk-description {
+    color: #bdbdbd;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-top: 5px;
+}
+
+.cf-empty {
+    text-align: center;
+    color: #757575;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Settings section */
+.cf-section label {
+    display: block;
+    margin: 8px 0;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+.cf-section input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #4fc3f7;
+}
+
+/* Scrollbar styling for webkit browsers */
+.cf-sheet-display::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cf-sheet-display::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.cf-sheet-display::-webkit-scrollbar-thumb {
+    background: #4fc3f7;
+    border-radius: 4px;
+}
+
+.cf-sheet-display::-webkit-scrollbar-thumb:hover {
+    background: #29b6f6;
+}
+
+/* Animation for new perk additions */
+.cf-perk-entry {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .cf-choice-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cf-controls {
+        justify-content: center;
+    }
+    
+    .cf-cp-display {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

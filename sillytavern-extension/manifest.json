@@ -1,0 +1,12 @@
+{
+  "display_name": "Celestial Forge Character Sheet",
+  "loading_order": 50,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Crazy-Rain",
+  "version": "1.0.0",
+  "homePage": "https://github.com/Crazy-Rain/Forge-Character-Sheet",
+  "description": "Automatic CP tracking and perk selection for Celestial Forge roleplay sessions"
+}

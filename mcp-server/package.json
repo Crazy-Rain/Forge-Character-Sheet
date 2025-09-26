@@ -1,0 +1,17 @@
+{
+  "name": "celestial-forge-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Celestial Forge character sheet management",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0"
+  },
+  "keywords": ["mcp", "celestial-forge", "character-sheet", "roleplay"],
+  "author": "Crazy-Rain",
+  "license": "MIT"
+}
