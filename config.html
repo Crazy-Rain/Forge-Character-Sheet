@@ -402,10 +402,6 @@
                 <h3>⚙️ Application Settings</h3>
                 <div class="settings-grid">
                     <div class="setting-item">
-                        <label for="auto-save">Auto-save sheets</label>
-                        <input type="checkbox" id="auto-save" checked>
-                    </div>
-                    <div class="setting-item">
                         <label for="confirm-selections">Confirm perk selection</label>
                         <input type="checkbox" id="confirm-selections" checked>
                     </div>
@@ -447,7 +443,6 @@
         let currentSheet = [];
         let currentCP = 0;
         let settings = {
-            autoSave: true,
             confirmSelections: true,
             showDescriptions: true,
             rememberLastSheet: true
@@ -919,7 +914,6 @@
             }
             
             // Update UI
-            document.getElementById('auto-save').checked = settings.autoSave;
             document.getElementById('confirm-selections').checked = settings.confirmSelections;
             document.getElementById('show-descriptions').checked = settings.showDescriptions;
             document.getElementById('remember-last-sheet').checked = settings.rememberLastSheet;
@@ -927,7 +921,6 @@
 
         function saveSettings() {
             settings = {
-                autoSave: document.getElementById('auto-save').checked,
                 confirmSelections: document.getElementById('confirm-selections').checked,
                 showDescriptions: document.getElementById('show-descriptions').checked,
                 rememberLastSheet: document.getElementById('remember-last-sheet').checked
@@ -943,7 +936,6 @@
             }
             
             settings = {
-                autoSave: true,
                 confirmSelections: true,
                 showDescriptions: true,
                 rememberLastSheet: true

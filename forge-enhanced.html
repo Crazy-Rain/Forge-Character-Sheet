@@ -845,10 +845,6 @@
             <h3>⚙️ Application Settings</h3>
             <div class="config-checkbox-group">
               <label>
-                <input type="checkbox" id="config-auto-save" checked>
-                Auto-save sheets every 30 seconds
-              </label>
-              <label>
                 <input type="checkbox" id="config-confirm-selections" checked>
                 Confirm perk selections
               </label>
@@ -1205,26 +1201,10 @@
       rerollDomains();
       showSuccess(`Added "${perk.name}" to your sheet!`);
       
-      // Auto-save if enabled
-      const settings = JSON.parse(localStorage.getItem("forgeSettings") || "{}");
-      if (settings.autoSave !== false) { // default true
-        autoSaveSheet();
-      }
+      // Auto-save functionality disabled
     }
 
-    function autoSaveSheet() {
-      const lastSheetName = localStorage.getItem("lastSheetName");
-      if (lastSheetName) {
-        const savedSheets = JSON.parse(localStorage.getItem("forgeSheets") || "{}");
-        savedSheets[lastSheetName] = {
-          sheet: sheet,
-          currentCP: currentCP,
-          totalCP: totalCP,
-          timestamp: new Date().toISOString()
-        };
-        localStorage.setItem("forgeSheets", JSON.stringify(savedSheets));
-      }
-    }
+    // Auto-save functionality removed
 
     function updateSheet(){
       const container = document.getElementById("sheet");
@@ -1653,11 +1633,7 @@
     // Initialize when page loads
     window.addEventListener('load', loadData);
 
-    // Auto-save data periodically
-    setInterval(() => {
-      saveSheet();
-      saveCPData();
-    }, 30000); // Save every 30 seconds
+    // Auto-save disabled - no periodic saving
 
     // Message API for iframe communication with SillyTavern
     if (isIframe) {
@@ -2119,10 +2095,7 @@
         const text = await file.text();
         const settings = JSON.parse(text);
         
-        // Apply the settings
-        if (settings.hasOwnProperty('autoSave')) {
-          document.getElementById('config-auto-save').checked = settings.autoSave;
-        }
+        // Apply the settings (autoSave setting ignored as it's disabled)
         if (settings.hasOwnProperty('confirmSelections')) {
           document.getElementById('config-confirm-selections').checked = settings.confirmSelections;
         }
@@ -2146,7 +2119,6 @@
     function configLoadSettings() {
       const settings = JSON.parse(localStorage.getItem('forgeSettings') || '{}');
       
-      document.getElementById('config-auto-save').checked = settings.autoSave !== false;
       document.getElementById('config-confirm-selections').checked = settings.confirmSelections !== false;
       document.getElementById('config-show-descriptions').checked = settings.showDescriptions !== false;
       document.getElementById('config-remember-last-sheet').checked = settings.rememberLastSheet !== false;
@@ -2154,7 +2126,6 @@
 
     function configSaveSettings() {
       const settings = {
-        autoSave: document.getElementById('config-auto-save').checked,
         confirmSelections: document.getElementById('config-confirm-selections').checked,
         showDescriptions: document.getElementById('config-show-descriptions').checked,
         rememberLastSheet: document.getElementById('config-remember-last-sheet').checked
@@ -2169,7 +2140,6 @@
         return;
       }
       
-      document.getElementById('config-auto-save').checked = true;
       document.getElementById('config-confirm-selections').checked = true;
       document.getElementById('config-show-descriptions').checked = true;
       document.getElementById('config-remember-last-sheet').checked = true;

@@ -451,10 +451,6 @@
             <h3>⚙️ Application Settings</h3>
             <div class="config-checkbox-group">
               <label>
-                <input type="checkbox" id="config-auto-save" checked>
-                Auto-save sheets every 30 seconds
-              </label>
-              <label>
                 <input type="checkbox" id="config-confirm-selections" checked>
                 Confirm perk selections
               </label>
@@ -1091,7 +1087,6 @@
 
     function configExportSettings() {
       const settings = {
-        autoSave: document.getElementById('config-auto-save').checked,
         confirmSelections: document.getElementById('config-confirm-selections').checked,
         showDescriptions: document.getElementById('config-show-descriptions').checked,
         rememberLastSheet: document.getElementById('config-remember-last-sheet').checked
@@ -1202,9 +1197,7 @@
         const text = await file.text();
         const settings = JSON.parse(text);
         
-        if (settings.hasOwnProperty('autoSave')) {
-          document.getElementById('config-auto-save').checked = settings.autoSave;
-        }
+        // Apply settings (ignoring autoSave as it's disabled)
         if (settings.hasOwnProperty('confirmSelections')) {
           document.getElementById('config-confirm-selections').checked = settings.confirmSelections;
         }
@@ -1228,7 +1221,6 @@
     function configLoadSettings() {
       const settings = JSON.parse(localStorage.getItem('forgeSettings') || '{}');
       
-      document.getElementById('config-auto-save').checked = settings.autoSave !== false;
       document.getElementById('config-confirm-selections').checked = settings.confirmSelections !== false;
       document.getElementById('config-show-descriptions').checked = settings.showDescriptions !== false;
       document.getElementById('config-remember-last-sheet').checked = settings.rememberLastSheet !== false;
@@ -1236,7 +1228,6 @@
 
     function configSaveSettings() {
       const settings = {
-        autoSave: document.getElementById('config-auto-save').checked,
         confirmSelections: document.getElementById('config-confirm-selections').checked,
         showDescriptions: document.getElementById('config-show-descriptions').checked,
         rememberLastSheet: document.getElementById('config-remember-last-sheet').checked
@@ -1251,7 +1242,6 @@
         return;
       }
       
-      document.getElementById('config-auto-save').checked = true;
       document.getElementById('config-confirm-selections').checked = true;
       document.getElementById('config-show-descriptions').checked = true;
       document.getElementById('config-remember-last-sheet').checked = true;
