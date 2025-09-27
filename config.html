@@ -449,6 +449,99 @@
         }
 
         .perk-item-cost {
+            color: #ffb74d;
+            font-weight: bold;
+        }
+
+        /* Sub-Perks Management Styles */
+        .sub-perk-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #424242;
+            border-radius: 5px;
+            background: #2a2a2a;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .sub-perk-result-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #424242;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .sub-perk-result-item:hover {
+            background: #3a3a3a;
+        }
+
+        .sub-perk-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .sub-perk-result-name {
+            font-weight: bold;
+            color: #64b5f6;
+            margin-bottom: 3px;
+        }
+
+        .sub-perk-result-info {
+            font-size: 0.85em;
+            color: #aaa;
+        }
+
+        .current-sub-perks {
+            border: 1px solid #424242;
+            border-radius: 5px;
+            background: #2a2a2a;
+            padding: 10px;
+            min-height: 60px;
+        }
+
+        .sub-perk-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 8px;
+            margin: 5px 0;
+            background: #1a1a1a;
+            border-radius: 3px;
+            border-left: 3px solid #64b5f6;
+        }
+
+        .sub-perk-info {
+            flex-grow: 1;
+        }
+
+        .sub-perk-name {
+            font-weight: bold;
+            color: #64b5f6;
+        }
+
+        .sub-perk-details {
+            font-size: 0.85em;
+            color: #aaa;
+        }
+
+        .sub-perk-remove {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sub-perk-remove:hover {
+            background: #d32f2f;
+        }
+
+        .perk-item-cost {
             color: #ffcc02;
             font-weight: bold;
         }
@@ -649,6 +742,29 @@
                             <div class="form-group">
                                 <label for="edit-perk-description">Description:</label>
                                 <textarea id="edit-perk-description" placeholder="Perk description"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="edit-perk-primary"> Primary Perk (bundle of sub-perks)
+                                </label>
+                                <small>Primary Perks show their sub-perks instead of description and purchase all sub-perks together</small>
+                            </div>
+                            
+                            <div id="sub-perks-section" style="display: none;">
+                                <h5>Sub-Perks Management</h5>
+                                <div class="form-group">
+                                    <label for="sub-perk-search">Search for sub-perks to add:</label>
+                                    <input type="text" id="sub-perk-search" placeholder="Search perks..." oninput="searchSubPerks()">
+                                    <div id="sub-perk-results" class="sub-perk-results"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Current Sub-Perks:</label>
+                                    <div id="current-sub-perks" class="current-sub-perks">
+                                        <em>No sub-perks added yet</em>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -1505,8 +1621,146 @@
             document.getElementById('edit-perk-cost').value = perk.cost || 0;
             document.getElementById('edit-perk-description').value = perk.description || '';
             
+            // Handle Primary Perk checkbox and sub-perks
+            const isPrimary = perk.is_primary || false;
+            document.getElementById('edit-perk-primary').checked = isPrimary;
+            toggleSubPerksSection(isPrimary);
+            
+            if (isPrimary) {
+                displayCurrentSubPerks(perk.sub_perks || []);
+            }
+            
             // Scroll to form
             document.getElementById('perk-edit-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleSubPerksSection(show) {
+            const section = document.getElementById('sub-perks-section');
+            const descriptionGroup = document.getElementById('edit-perk-description').parentElement;
+            
+            if (show) {
+                section.style.display = 'block';
+                descriptionGroup.style.display = 'none';
+            } else {
+                section.style.display = 'none';
+                descriptionGroup.style.display = 'block';
+                // Clear sub-perk search
+                document.getElementById('sub-perk-search').value = '';
+                document.getElementById('sub-perk-results').style.display = 'none';
+            }
+        }
+
+        function displayCurrentSubPerks(subPerks) {
+            const container = document.getElementById('current-sub-perks');
+            
+            if (!subPerks || subPerks.length === 0) {
+                container.innerHTML = '<em>No sub-perks added yet</em>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            subPerks.forEach((subPerk, index) => {
+                const item = document.createElement('div');
+                item.className = 'sub-perk-item';
+                item.innerHTML = `
+                    <div class="sub-perk-info">
+                        <div class="sub-perk-name">${subPerk.name}</div>
+                        <div class="sub-perk-details">${subPerk.origin || 'Unknown'} - ${subPerk.cost || 0} CP</div>
+                    </div>
+                    <button class="sub-perk-remove" onclick="removeSubPerk(${index})">&times;</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function searchSubPerks() {
+            const searchTerm = document.getElementById('sub-perk-search').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('sub-perk-results');
+            
+            if (!searchTerm || searchTerm.length < 2) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            resultsContainer.innerHTML = '';
+            const currentSubPerkNames = getCurrentSubPerkNames();
+            
+            // Search through all perks in all domains
+            Object.keys(perksData).forEach(domain => {
+                const perks = perksData[domain] || [];
+                perks.forEach(perk => {
+                    // Don't show the current perk being edited or already added sub-perks
+                    if (currentEditingPerk && 
+                        domain === currentEditingPerk.domain && 
+                        perk.name === perksData[currentEditingPerk.domain][currentEditingPerk.index].name) {
+                        return;
+                    }
+                    
+                    if (currentSubPerkNames.includes(perk.name)) {
+                        return;
+                    }
+                    
+                    const matchesSearch = perk.name.toLowerCase().includes(searchTerm) ||
+                        (perk.description && perk.description.toLowerCase().includes(searchTerm)) ||
+                        (perk.origin && perk.origin.toLowerCase().includes(searchTerm));
+                    
+                    if (matchesSearch) {
+                        const item = document.createElement('div');
+                        item.className = 'sub-perk-result-item';
+                        item.onclick = () => addSubPerk(perk, domain);
+                        item.innerHTML = `
+                            <div class="sub-perk-result-name">${perk.name}</div>
+                            <div class="sub-perk-result-info">${perk.origin || 'Unknown'} - ${perk.cost || 0} CP - ${domain}</div>
+                        `;
+                        resultsContainer.appendChild(item);
+                    }
+                });
+            });
+            
+            resultsContainer.style.display = resultsContainer.children.length > 0 ? 'block' : 'none';
+        }
+
+        function getCurrentSubPerkNames() {
+            if (!currentEditingPerk) return [];
+            
+            const perk = perksData[currentEditingPerk.domain][currentEditingPerk.index];
+            return (perk.sub_perks || []).map(sp => sp.name);
+        }
+
+        function addSubPerk(perk, domain) {
+            if (!currentEditingPerk) return;
+            
+            const currentPerk = perksData[currentEditingPerk.domain][currentEditingPerk.index];
+            if (!currentPerk.sub_perks) {
+                currentPerk.sub_perks = [];
+            }
+            
+            // Create sub-perk object with essential info
+            const subPerk = {
+                name: perk.name,
+                origin: perk.origin || '',
+                cost: perk.cost || 0,
+                description: perk.description || '',
+                domain: domain
+            };
+            
+            currentPerk.sub_perks.push(subPerk);
+            displayCurrentSubPerks(currentPerk.sub_perks);
+            
+            // Clear search
+            document.getElementById('sub-perk-search').value = '';
+            document.getElementById('sub-perk-results').style.display = 'none';
+        }
+
+        function removeSubPerk(index) {
+            if (!currentEditingPerk) return;
+            
+            const currentPerk = perksData[currentEditingPerk.domain][currentEditingPerk.index];
+            if (currentPerk.sub_perks && currentPerk.sub_perks[index]) {
+                currentPerk.sub_perks.splice(index, 1);
+                displayCurrentSubPerks(currentPerk.sub_perks);
+            }
+        }
         }
 
         function savePerkEdit() {
@@ -1518,6 +1772,7 @@
             const newOrigin = document.getElementById('edit-perk-origin').value.trim();
             const newCost = parseInt(document.getElementById('edit-perk-cost').value) || 0;
             const newDescription = document.getElementById('edit-perk-description').value.trim();
+            const isPrimary = document.getElementById('edit-perk-primary').checked;
             
             if (!newName) {
                 showError('Perk name is required');
@@ -1537,6 +1792,19 @@
                 description: newDescription,
                 sub_perks: perksData[oldDomain][index].sub_perks || []
             };
+            
+            // Add Primary Perk properties
+            if (isPrimary) {
+                updatedPerk.is_primary = true;
+                // For Primary Perks, calculate total cost from sub-perks if they exist
+                if (updatedPerk.sub_perks && updatedPerk.sub_perks.length > 0) {
+                    updatedPerk.cost = updatedPerk.sub_perks.reduce((total, sp) => total + (sp.cost || 0), 0);
+                }
+            } else {
+                // If no longer primary, clear sub-perks and restore normal description
+                delete updatedPerk.is_primary;
+                updatedPerk.sub_perks = [];
+            }
             
             // If domain changed, move the perk
             if (newDomain !== oldDomain) {
@@ -1854,9 +2122,17 @@
             showSuccess(`Added "${newPerk.name}" to ${perk.domain} domain!`);
         }
 
-        // Initialize file drop zone when page loads
+        // Initialize file drop zone and event listeners when page loads
         window.addEventListener('load', () => {
             setupFileDropZone();
+            
+            // Add event listener for Primary Perk checkbox
+            const primaryCheckbox = document.getElementById('edit-perk-primary');
+            if (primaryCheckbox) {
+                primaryCheckbox.addEventListener('change', function() {
+                    toggleSubPerksSection(this.checked);
+                });
+            }
         });
 
         function showError(message) {
