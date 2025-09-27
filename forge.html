@@ -69,6 +69,7 @@
       <button onclick="loadSheet()">Load</button>
       <button onclick="wipeSheet()">Wipe</button>
       <button onclick="downloadSheet()">Download Sheet as JSON</button>
+      <button onclick="openConfiguration()" style="background: #4CAF50; color: white;">⚙️ Configuration</button>
     </div>
     <h4>Copyable for SillyTavern:</h4>
     <textarea id="export" readonly></textarea>
@@ -367,6 +368,10 @@
         totalCP = cpData.totalCP || 0;
         updateCPDisplay();
       }
+    }
+
+    function openConfiguration() {
+      window.open('config.html', '_blank');
     }
 
     loadData();
