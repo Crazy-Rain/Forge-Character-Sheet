@@ -317,6 +317,220 @@
             color: #c0c0c0;
             margin-top: 5px;
         }
+
+        /* Perk Editor Styles */
+        .editor-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #424242;
+        }
+
+        .editor-tab {
+            padding: 10px 20px;
+            background: #2a2a2a;
+            border: 1px solid #424242;
+            border-bottom: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .editor-tab.active {
+            background: #424242;
+            color: #64b5f6;
+        }
+
+        .editor-tab:hover {
+            background: #3a3a3a;
+        }
+
+        .editor-content {
+            display: none;
+        }
+
+        .editor-content.active {
+            display: block;
+        }
+
+        .raw-editor {
+            width: 100%;
+            height: 400px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border: 1px solid #424242;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .perk-form {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #81c784;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #424242;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #64b5f6;
+            box-shadow: 0 0 5px rgba(100, 181, 246, 0.3);
+        }
+
+        .perk-list-editor {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #424242;
+            border-radius: 5px;
+            background: #2a2a2a;
+            margin-bottom: 15px;
+        }
+
+        .perk-item-editor {
+            padding: 10px;
+            border-bottom: 1px solid #424242;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .perk-item-editor:hover {
+            background: #3a3a3a;
+        }
+
+        .perk-item-editor:last-child {
+            border-bottom: none;
+        }
+
+        .perk-item-info {
+            flex-grow: 1;
+        }
+
+        .perk-item-name {
+            font-weight: bold;
+            color: #64b5f6;
+        }
+
+        .perk-item-domain {
+            color: #81c784;
+            font-size: 0.9em;
+        }
+
+        .perk-item-cost {
+            color: #ffcc02;
+            font-weight: bold;
+        }
+
+        .compiler-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #424242;
+            border-radius: 5px;
+            background: #2a2a2a;
+            margin-top: 20px;
+        }
+
+        .compiled-perk {
+            padding: 15px;
+            border-bottom: 1px solid #424242;
+            position: relative;
+        }
+
+        .compiled-perk:last-child {
+            border-bottom: none;
+        }
+
+        .compiled-perk.added {
+            opacity: 0.5;
+            background: #1a5a1a;
+        }
+
+        .compiled-perk-form {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .compiled-perk-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .file-drop-zone {
+            border: 2px dashed #424242;
+            border-radius: 5px;
+            padding: 40px;
+            text-align: center;
+            color: #c0c0c0;
+            background: #2a2a2a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .file-drop-zone:hover,
+        .file-drop-zone.dragover {
+            border-color: #64b5f6;
+            background: #3a3a4a;
+            color: #64b5f6;
+        }
+
+        .parsing-status {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #c0c0c0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4fc3f7, #64b5f6);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -325,6 +539,7 @@
         
         <div class="nav-buttons">
             <button onclick="showTab('perk-browser')">Perk Browser</button>
+            <button onclick="showTab('perk-editor')">Perk Editor</button>
             <button onclick="showTab('sheet-manager')">Sheet Manager</button>
             <button onclick="showTab('import-export')">Import/Export</button>
             <button onclick="showTab('settings')">Settings</button>
@@ -358,6 +573,116 @@
                 <input type="text" class="search-box" id="perk-search" placeholder="Search perks by name or description..." oninput="filterPerks()">
                 
                 <div class="perk-list" id="perk-list"></div>
+            </div>
+        </div>
+
+        <div id="perk-editor" class="tab-content">
+            <div class="panel">
+                <h3>🛠️ Perk Editor/Fixer</h3>
+                
+                <div class="editor-tabs">
+                    <div class="editor-tab active" onclick="showEditorTab('raw-editor')">Raw File Editor</div>
+                    <div class="editor-tab" onclick="showEditorTab('individual-editor')">Individual Perk Editor</div>
+                    <div class="editor-tab" onclick="showEditorTab('compiler')">Perk Compiler</div>
+                </div>
+
+                <!-- Raw File Editor -->
+                <div id="raw-editor" class="editor-content active">
+                    <h4>Direct Perks Database Editor</h4>
+                    <p>Edit the raw perks.json database directly. Be careful with syntax!</p>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <button onclick="loadRawPerksData()">Load Current Database</button>
+                        <button onclick="saveRawPerksData()" style="background: #4caf50;">Save Changes</button>
+                        <button onclick="validateRawPerksData()">Validate JSON</button>
+                        <button onclick="formatRawPerksData()">Format JSON</button>
+                    </div>
+                    
+                    <textarea id="raw-perks-editor" class="raw-editor" placeholder="Perks database JSON will be loaded here..."></textarea>
+                    
+                    <div id="raw-editor-status" style="margin-top: 10px; font-style: italic; color: #c0c0c0;"></div>
+                </div>
+
+                <!-- Individual Perk Editor -->
+                <div id="individual-editor" class="editor-content">
+                    <h4>Individual Perk Editor</h4>
+                    <p>Search, select, and edit individual perks with a user-friendly interface.</p>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" class="search-box" id="perk-editor-search" 
+                               placeholder="Search perks by name or description..." 
+                               oninput="filterPerksForEditing()" style="margin-bottom: 10px;">
+                        
+                        <select id="perk-editor-domain-filter" onchange="filterPerksForEditing()" style="margin-bottom: 10px;">
+                            <option value="">All Domains</option>
+                        </select>
+                    </div>
+
+                    <div class="perk-list-editor" id="perk-editor-list"></div>
+
+                    <div id="perk-edit-form" style="display: none;">
+                        <h4>Edit Perk: <span id="editing-perk-name"></span></h4>
+                        
+                        <div class="perk-form">
+                            <div class="form-group">
+                                <label for="edit-perk-name">Name:</label>
+                                <input type="text" id="edit-perk-name" placeholder="Perk name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="edit-perk-domain">Domain:</label>
+                                <select id="edit-perk-domain">
+                                    <option value="">Select Domain</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="edit-perk-origin">Origin:</label>
+                                <input type="text" id="edit-perk-origin" placeholder="Source/Origin">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="edit-perk-cost">Cost:</label>
+                                <input type="number" id="edit-perk-cost" placeholder="CP cost" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="edit-perk-description">Description:</label>
+                                <textarea id="edit-perk-description" placeholder="Perk description"></textarea>
+                            </div>
+                        </div>
+                        
+                        <button onclick="savePerkEdit()" style="background: #4caf50;">Save Perk</button>
+                        <button onclick="cancelPerkEdit()">Cancel</button>
+                        <button onclick="deletePerk()" class="danger" style="float: right;">Delete Perk</button>
+                    </div>
+                </div>
+
+                <!-- Perk Compiler -->
+                <div id="compiler" class="editor-content">
+                    <h4>Perk Compiler</h4>
+                    <p>Upload documents to automatically parse and extract perks. Supports text files, Word documents, and PDFs.</p>
+                    
+                    <div class="file-drop-zone" id="file-drop-zone" onclick="document.getElementById('compiler-file-input').click()">
+                        <div>
+                            <strong>Click to select files or drag & drop here</strong><br>
+                            <small>Supported formats: .txt, .doc, .docx, .pdf</small>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="compiler-file-input" style="display: none;" 
+                           accept=".txt,.doc,.docx,.pdf" 
+                           multiple onchange="handleFileUpload(this.files)">
+                    
+                    <div id="parsing-status" class="parsing-status" style="display: none;">
+                        <div>Parsing files...</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="parsing-progress"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="compiler-results" class="compiler-results" style="display: none;"></div>
+                </div>
             </div>
         </div>
 
@@ -448,6 +773,11 @@
             rememberLastSheet: true
         };
         let selectedPerk = null;
+        let currentEditingPerk = null;
+        let currentEditingDomain = null;
+        let parsedPerks = [];
+
+        // Tab management functions
 
         // Load data on page load
         window.addEventListener('load', async () => {
@@ -958,6 +1288,576 @@
                 el.style.display = 'none';
             }, 3000);
         }
+
+        // Perk Editor Functions
+        function showEditorTab(tabName) {
+            // Hide all editor tabs
+            document.querySelectorAll('.editor-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.editor-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Initialize the tab if needed
+            if (tabName === 'individual-editor') {
+                populatePerkEditorFilters();
+                displayPerksForEditing();
+            }
+        }
+
+        // Raw File Editor Functions
+        function loadRawPerksData() {
+            const editor = document.getElementById('raw-perks-editor');
+            const status = document.getElementById('raw-editor-status');
+            
+            try {
+                editor.value = JSON.stringify(perksData, null, 2);
+                status.textContent = 'Database loaded successfully';
+                status.style.color = '#4caf50';
+            } catch (error) {
+                status.textContent = `Error loading database: ${error.message}`;
+                status.style.color = '#f44336';
+            }
+        }
+
+        function validateRawPerksData() {
+            const editor = document.getElementById('raw-perks-editor');
+            const status = document.getElementById('raw-editor-status');
+            const text = editor.value.trim();
+            
+            if (!text) {
+                status.textContent = 'No data to validate';
+                status.style.color = '#ff9800';
+                return false;
+            }
+            
+            try {
+                const parsed = JSON.parse(text);
+                
+                // Validate structure
+                if (typeof parsed !== 'object' || Array.isArray(parsed)) {
+                    throw new Error('Root must be an object (domains)');
+                }
+                
+                let totalPerks = 0;
+                for (const [domain, perks] of Object.entries(parsed)) {
+                    if (!Array.isArray(perks)) {
+                        throw new Error(`Domain "${domain}" must contain an array of perks`);
+                    }
+                    
+                    perks.forEach((perk, index) => {
+                        if (!perk.name || typeof perk.name !== 'string') {
+                            throw new Error(`Perk at index ${index} in domain "${domain}" missing valid name`);
+                        }
+                        if (perk.cost !== undefined && (typeof perk.cost !== 'number' || perk.cost < 0)) {
+                            throw new Error(`Perk "${perk.name}" has invalid cost`);
+                        }
+                    });
+                    
+                    totalPerks += perks.length;
+                }
+                
+                status.textContent = `✓ Valid JSON - ${Object.keys(parsed).length} domains, ${totalPerks} perks`;
+                status.style.color = '#4caf50';
+                return true;
+            } catch (error) {
+                status.textContent = `✗ Invalid JSON: ${error.message}`;
+                status.style.color = '#f44336';
+                return false;
+            }
+        }
+
+        function formatRawPerksData() {
+            const editor = document.getElementById('raw-perks-editor');
+            const status = document.getElementById('raw-editor-status');
+            const text = editor.value.trim();
+            
+            if (!text) {
+                status.textContent = 'No data to format';
+                status.style.color = '#ff9800';
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(text);
+                editor.value = JSON.stringify(parsed, null, 2);
+                status.textContent = 'JSON formatted successfully';
+                status.style.color = '#4caf50';
+            } catch (error) {
+                status.textContent = `Cannot format invalid JSON: ${error.message}`;
+                status.style.color = '#f44336';
+            }
+        }
+
+        function saveRawPerksData() {
+            if (!validateRawPerksData()) {
+                return;
+            }
+            
+            const editor = document.getElementById('raw-perks-editor');
+            const status = document.getElementById('raw-editor-status');
+            
+            try {
+                const newPerksData = JSON.parse(editor.value);
+                perksData = newPerksData;
+                
+                // Update the perk browser
+                populateDomainFilter();
+                updateStats();
+                displayPerks();
+                
+                // Update individual editor
+                populatePerkEditorFilters();
+                displayPerksForEditing();
+                
+                status.textContent = 'Database saved successfully!';
+                status.style.color = '#4caf50';
+                showSuccess('Perks database updated successfully!');
+            } catch (error) {
+                status.textContent = `Save failed: ${error.message}`;
+                status.style.color = '#f44336';
+                showError(`Failed to save database: ${error.message}`);
+            }
+        }
+
+        // Individual Perk Editor Functions
+        function populatePerkEditorFilters() {
+            const domainFilter = document.getElementById('perk-editor-domain-filter');
+            domainFilter.innerHTML = '<option value="">All Domains</option>';
+            
+            Object.keys(perksData).sort().forEach(domain => {
+                const option = document.createElement('option');
+                option.value = domain;
+                option.textContent = domain;
+                domainFilter.appendChild(option);
+            });
+            
+            // Also populate the edit form domain dropdown
+            const editDomain = document.getElementById('edit-perk-domain');
+            editDomain.innerHTML = '<option value="">Select Domain</option>';
+            
+            Object.keys(perksData).sort().forEach(domain => {
+                const option = document.createElement('option');
+                option.value = domain;
+                option.textContent = domain;
+                editDomain.appendChild(option);
+            });
+        }
+
+        function filterPerksForEditing() {
+            const searchTerm = document.getElementById('perk-editor-search').value.toLowerCase();
+            const domainFilter = document.getElementById('perk-editor-domain-filter').value;
+            
+            displayPerksForEditing(searchTerm, domainFilter);
+        }
+
+        function displayPerksForEditing(searchTerm = '', domainFilter = '') {
+            const perkList = document.getElementById('perk-editor-list');
+            perkList.innerHTML = '';
+
+            const domainsToShow = domainFilter ? [domainFilter] : Object.keys(perksData);
+
+            domainsToShow.forEach(domain => {
+                const perks = perksData[domain] || [];
+                
+                perks.forEach((perk, index) => {
+                    const matchesSearch = !searchTerm || 
+                        perk.name.toLowerCase().includes(searchTerm) ||
+                        (perk.description && perk.description.toLowerCase().includes(searchTerm)) ||
+                        (perk.origin && perk.origin.toLowerCase().includes(searchTerm));
+                    
+                    if (matchesSearch) {
+                        const perkItem = document.createElement('div');
+                        perkItem.className = 'perk-item-editor';
+                        perkItem.onclick = () => editPerk(domain, index);
+                        
+                        perkItem.innerHTML = `
+                            <div class="perk-item-info">
+                                <div class="perk-item-name">${perk.name}</div>
+                                <div class="perk-item-domain">${domain}${perk.origin ? ' - ' + perk.origin : ''}</div>
+                            </div>
+                            <div class="perk-item-cost">${perk.cost || 0} CP</div>
+                        `;
+                        
+                        perkList.appendChild(perkItem);
+                    }
+                });
+            });
+        }
+
+        function editPerk(domain, index) {
+            const perk = perksData[domain][index];
+            currentEditingPerk = { domain, index };
+            
+            // Show the edit form
+            document.getElementById('perk-edit-form').style.display = 'block';
+            document.getElementById('editing-perk-name').textContent = perk.name;
+            
+            // Populate the form
+            document.getElementById('edit-perk-name').value = perk.name || '';
+            document.getElementById('edit-perk-domain').value = domain;
+            document.getElementById('edit-perk-origin').value = perk.origin || '';
+            document.getElementById('edit-perk-cost').value = perk.cost || 0;
+            document.getElementById('edit-perk-description').value = perk.description || '';
+            
+            // Scroll to form
+            document.getElementById('perk-edit-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function savePerkEdit() {
+            if (!currentEditingPerk) return;
+            
+            const { domain: oldDomain, index } = currentEditingPerk;
+            const newName = document.getElementById('edit-perk-name').value.trim();
+            const newDomain = document.getElementById('edit-perk-domain').value;
+            const newOrigin = document.getElementById('edit-perk-origin').value.trim();
+            const newCost = parseInt(document.getElementById('edit-perk-cost').value) || 0;
+            const newDescription = document.getElementById('edit-perk-description').value.trim();
+            
+            if (!newName) {
+                showError('Perk name is required');
+                return;
+            }
+            
+            if (!newDomain) {
+                showError('Domain is required');
+                return;
+            }
+            
+            // Create updated perk
+            const updatedPerk = {
+                name: newName,
+                origin: newOrigin,
+                cost: newCost,
+                description: newDescription,
+                sub_perks: perksData[oldDomain][index].sub_perks || []
+            };
+            
+            // If domain changed, move the perk
+            if (newDomain !== oldDomain) {
+                // Remove from old domain
+                perksData[oldDomain].splice(index, 1);
+                
+                // Add to new domain (create if doesn't exist)
+                if (!perksData[newDomain]) {
+                    perksData[newDomain] = [];
+                }
+                perksData[newDomain].push(updatedPerk);
+            } else {
+                // Update in place
+                perksData[oldDomain][index] = updatedPerk;
+            }
+            
+            // Update displays
+            populateDomainFilter();
+            updateStats();
+            displayPerks();
+            populatePerkEditorFilters();
+            displayPerksForEditing();
+            
+            // Hide form
+            cancelPerkEdit();
+            
+            showSuccess(`Perk "${newName}" saved successfully!`);
+        }
+
+        function deletePerk() {
+            if (!currentEditingPerk) return;
+            
+            const { domain, index } = currentEditingPerk;
+            const perkName = perksData[domain][index].name;
+            
+            if (!confirm(`Are you sure you want to delete the perk "${perkName}"? This cannot be undone.`)) {
+                return;
+            }
+            
+            // Remove the perk
+            perksData[domain].splice(index, 1);
+            
+            // If domain is now empty, remove it
+            if (perksData[domain].length === 0) {
+                delete perksData[domain];
+            }
+            
+            // Update displays
+            populateDomainFilter();
+            updateStats();
+            displayPerks();
+            populatePerkEditorFilters();
+            displayPerksForEditing();
+            
+            // Hide form
+            cancelPerkEdit();
+            
+            showSuccess(`Perk "${perkName}" deleted successfully!`);
+        }
+
+        function cancelPerkEdit() {
+            document.getElementById('perk-edit-form').style.display = 'none';
+            currentEditingPerk = null;
+            
+            // Clear form
+            document.getElementById('edit-perk-name').value = '';
+            document.getElementById('edit-perk-domain').value = '';
+            document.getElementById('edit-perk-origin').value = '';
+            document.getElementById('edit-perk-cost').value = '';
+            document.getElementById('edit-perk-description').value = '';
+        }
+
+        // Perk Compiler Functions
+        function setupFileDropZone() {
+            const dropZone = document.getElementById('file-drop-zone');
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFileUpload(e.dataTransfer.files);
+            });
+        }
+
+        function handleFileUpload(files) {
+            if (files.length === 0) return;
+            
+            const supportedTypes = ['.txt', '.doc', '.docx', '.pdf'];
+            const validFiles = Array.from(files).filter(file => {
+                const extension = '.' + file.name.split('.').pop().toLowerCase();
+                return supportedTypes.includes(extension);
+            });
+            
+            if (validFiles.length === 0) {
+                showError('No supported files found. Please upload .txt, .doc, .docx, or .pdf files.');
+                return;
+            }
+            
+            parseFiles(validFiles);
+        }
+
+        async function parseFiles(files) {
+            const statusDiv = document.getElementById('parsing-status');
+            const progressBar = document.getElementById('parsing-progress');
+            const resultsDiv = document.getElementById('compiler-results');
+            
+            statusDiv.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            parsedPerks = [];
+            
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const progress = ((i + 1) / files.length) * 100;
+                    progressBar.style.width = progress + '%';
+                    
+                    statusDiv.querySelector('div').textContent = `Parsing ${file.name}...`;
+                    
+                    const text = await readFileAsText(file);
+                    const foundPerks = extractPerksFromText(text, file.name);
+                    parsedPerks.push(...foundPerks);
+                    
+                    // Small delay to show progress
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                statusDiv.style.display = 'none';
+                displayCompiledPerks();
+                
+            } catch (error) {
+                showError(`Failed to parse files: ${error.message}`);
+                statusDiv.style.display = 'none';
+            }
+        }
+
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsText(file);
+            });
+        }
+
+        function extractPerksFromText(text, filename) {
+            const perks = [];
+            const lines = text.split('\n');
+            
+            // Common perk patterns
+            const perkPatterns = [
+                // Pattern: Name [Cost CP] - Description
+                /^(.+?)\s*\[(\d+)\s*CP\]\s*-\s*(.+)$/,
+                // Pattern: Name (Cost CP): Description  
+                /^(.+?)\s*\((\d+)\s*CP\):\s*(.+)$/,
+                // Pattern: Name - Cost CP - Description
+                /^(.+?)\s*-\s*(\d+)\s*CP\s*-\s*(.+)$/,
+                // Pattern: **Name** [Cost] Description
+                /^\*\*(.+?)\*\*\s*\[(\d+)\]\s*(.+)$/
+            ];
+            
+            let currentPerk = null;
+            let descriptionLines = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                let matched = false;
+                
+                // Try each pattern
+                for (const pattern of perkPatterns) {
+                    const match = line.match(pattern);
+                    if (match) {
+                        // Save previous perk if exists
+                        if (currentPerk) {
+                            currentPerk.description = descriptionLines.join(' ').trim();
+                            if (currentPerk.description.length > 20) { // Only add if description is substantial
+                                perks.push(currentPerk);
+                            }
+                        }
+                        
+                        // Start new perk
+                        currentPerk = {
+                            name: match[1].trim(),
+                            cost: parseInt(match[2]) || 0,
+                            description: match[3] ? match[3].trim() : '',
+                            origin: filename.replace(/\.[^/.]+$/, ""), // Remove file extension
+                            domain: '', // Will be set by user
+                            sub_perks: []
+                        };
+                        
+                        descriptionLines = currentPerk.description ? [currentPerk.description] : [];
+                        matched = true;
+                        break;
+                    }
+                }
+                
+                // If no pattern matched and we have a current perk, this might be continuation of description
+                if (!matched && currentPerk && line.length > 10) {
+                    descriptionLines.push(line);
+                }
+            }
+            
+            // Don't forget the last perk
+            if (currentPerk) {
+                currentPerk.description = descriptionLines.join(' ').trim();
+                if (currentPerk.description.length > 20) {
+                    perks.push(currentPerk);
+                }
+            }
+            
+            return perks;
+        }
+
+        function displayCompiledPerks() {
+            const resultsDiv = document.getElementById('compiler-results');
+            resultsDiv.innerHTML = '';
+            
+            if (parsedPerks.length === 0) {
+                resultsDiv.innerHTML = '<div class="parsing-status">No perks found. Try adjusting the file format or content.</div>';
+                resultsDiv.style.display = 'block';
+                return;
+            }
+            
+            parsedPerks.forEach((perk, index) => {
+                const perkDiv = document.createElement('div');
+                perkDiv.className = 'compiled-perk';
+                perkDiv.id = `compiled-perk-${index}`;
+                
+                perkDiv.innerHTML = `
+                    <div class="compiled-perk-form">
+                        <div class="compiled-perk-row">
+                            <input type="text" value="${perk.name}" placeholder="Perk Name" 
+                                   onchange="updateCompiledPerk(${index}, 'name', this.value)">
+                            <select onchange="updateCompiledPerk(${index}, 'domain', this.value)">
+                                <option value="">Select Domain</option>
+                                ${Object.keys(perksData).sort().map(domain => 
+                                    `<option value="${domain}">${domain}</option>`
+                                ).join('')}
+                            </select>
+                            <input type="number" value="${perk.cost}" placeholder="Cost" min="0"
+                                   onchange="updateCompiledPerk(${index}, 'cost', parseInt(this.value) || 0)">
+                            <button onclick="addCompiledPerk(${index})" style="background: #4caf50;">Add</button>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <input type="text" value="${perk.origin}" placeholder="Origin" style="width: 100%;"
+                                   onchange="updateCompiledPerk(${index}, 'origin', this.value)">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <textarea placeholder="Description" style="width: 100%; min-height: 80px;"
+                                      onchange="updateCompiledPerk(${index}, 'description', this.value)">${perk.description}</textarea>
+                        </div>
+                    </div>
+                `;
+                
+                resultsDiv.appendChild(perkDiv);
+            });
+            
+            resultsDiv.style.display = 'block';
+            showSuccess(`Found ${parsedPerks.length} potential perks!`);
+        }
+
+        function updateCompiledPerk(index, field, value) {
+            if (parsedPerks[index]) {
+                parsedPerks[index][field] = value;
+            }
+        }
+
+        function addCompiledPerk(index) {
+            const perk = parsedPerks[index];
+            
+            if (!perk.name.trim()) {
+                showError('Perk name is required');
+                return;
+            }
+            
+            if (!perk.domain) {
+                showError('Domain selection is required');
+                return;
+            }
+            
+            // Create the perk
+            const newPerk = {
+                name: perk.name.trim(),
+                origin: perk.origin.trim(),
+                cost: perk.cost || 0,
+                description: perk.description.trim(),
+                sub_perks: []
+            };
+            
+            // Add to domain (create if doesn't exist)
+            if (!perksData[perk.domain]) {
+                perksData[perk.domain] = [];
+            }
+            perksData[perk.domain].push(newPerk);
+            
+            // Mark as added
+            const perkDiv = document.getElementById(`compiled-perk-${index}`);
+            perkDiv.classList.add('added');
+            
+            // Update displays
+            populateDomainFilter();
+            updateStats();
+            displayPerks();
+            populatePerkEditorFilters();
+            
+            showSuccess(`Added "${newPerk.name}" to ${perk.domain} domain!`);
+        }
+
+        // Initialize file drop zone when page loads
+        window.addEventListener('load', () => {
+            setupFileDropZone();
+        });
 
         function showError(message) {
             const el = document.getElementById('error-message');
