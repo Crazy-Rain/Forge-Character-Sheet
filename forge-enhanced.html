@@ -112,6 +112,16 @@
       flex-grow: 1;
     }
     
+    .choice-sub-perks {
+      color: #81c784;
+      font-size: 0.8em;
+      margin-top: 8px;
+      padding: 6px;
+      background: rgba(129, 199, 132, 0.1);
+      border-radius: 4px;
+      border-left: 3px solid #81c784;
+    }
+    
     .sheet-entry { 
       margin-bottom: 1rem; 
       border-bottom: 2px dashed #424242; 
@@ -423,6 +433,11 @@
       <button onclick="loadSheet()">Load</button>
       <button onclick="wipeSheet()">Wipe</button>
       <button onclick="downloadSheet()">Download Sheet as JSON</button>
+      <button onclick="showImportSheet()">Import Sheet JSON</button>
+    </div>
+    <div id="import-sheet-input" style="display: none; margin-top: 1rem;">
+      <input type="file" id="sheet-file-input" accept=".json" onchange="importSheetFromFile(this)">
+      <p style="font-size: 0.9em; color: #81c784;">Select a sheet JSON file to import</p>
     </div>
     <h4>For SillyTavern Integration:</h4>
     <div class="sillytavern-integration">
@@ -500,13 +515,84 @@
         console.log("Attempting to load perks.json...");
         const res = await fetch("perks.json");
         if(!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-        perksData = await res.json();
+        const rawData = await res.json();
+        perksData = processPerksData(rawData);
         console.log("Perks data loaded successfully");
         onDataLoadSuccess();
       } catch (err) {
         console.error("Error loading perks.json:", err);
         handleLoadError(err);
       }
+    }
+
+    function processPerksData(rawData) {
+      const processedData = {};
+      
+      for (const [domain, perks] of Object.entries(rawData)) {
+        processedData[domain] = [];
+        
+        // Create maps for quick lookup
+        const perksByName = new Map();
+        const compoundPerks = [];
+        
+        // First pass: categorize perks
+        perks.forEach(perk => {
+          perksByName.set(perk.name, perk);
+          if (perk.name.includes('|')) {
+            compoundPerks.push(perk);
+          }
+        });
+        
+        // Second pass: process perks
+        perks.forEach(perk => {
+          // Skip compound perks with empty descriptions - we'll handle them specially
+          if (perk.name.includes('|') && !perk.description.trim()) {
+            return;
+          }
+          
+          // For compound perks with descriptions, break them into sub-perks
+          if (perk.name.includes('|') && perk.description.trim()) {
+            const names = perk.name.split('|').map(n => n.trim());
+            const mainName = names[0];
+            
+            // Create main perk
+            const mainPerk = {
+              ...perk,
+              name: mainName,
+              sub_perks: []
+            };
+            
+            // Add other parts as sub-perks if they exist individually
+            for (let i = 1; i < names.length; i++) {
+              const subName = names[i];
+              const individualPerk = perksByName.get(subName);
+              if (individualPerk && individualPerk.description.trim()) {
+                mainPerk.sub_perks.push({
+                  name: subName,
+                  origin: individualPerk.origin,
+                  cost: individualPerk.cost,
+                  description: individualPerk.description
+                });
+              }
+            }
+            
+            processedData[domain].push(mainPerk);
+          } else {
+            // Regular perk - include if it's not part of a compound perk or if compound perk doesn't exist
+            const isPartOfCompound = compoundPerks.some(cp => 
+              cp.name.includes('|') && 
+              cp.name.split('|').map(n => n.trim()).includes(perk.name) &&
+              !cp.description.trim()
+            );
+            
+            if (!isPartOfCompound) {
+              processedData[domain].push(perk);
+            }
+          }
+        });
+      }
+      
+      return processedData;
     }
 
     function onDataLoadSuccess() {
@@ -647,11 +733,17 @@
         const description = (perk.description || "No description available").substring(0, 150);
         const truncated = perk.description && perk.description.length > 150 ? "..." : "";
         
+        let subPerkInfo = "";
+        if (perk.sub_perks && perk.sub_perks.length > 0) {
+          subPerkInfo = `<div class="choice-sub-perks"><strong>Includes ${perk.sub_perks.length} sub-perk(s):</strong> ${perk.sub_perks.map(sp => sp.name).join(", ")}</div>`;
+        }
+        
         div.innerHTML = `
           <div class="choice-title">${perk.name || "Unknown Perk"}</div>
           <div class="choice-origin">${perk.origin || "Unknown Origin"}</div>
           <div class="choice-cost">[${perk.cost || 0} CP]</div>
           <div class="choice-description">${description}${truncated}</div>
+          ${subPerkInfo}
         `;
         container.appendChild(div);
       });
@@ -846,18 +938,60 @@
     }
 
     function saveSheet(){ 
-      localStorage.setItem("forgeSheet", JSON.stringify(sheet)); 
-      showSuccess("Sheet saved!");
+      const sheetName = prompt("Enter a name for this sheet:", `Sheet_${new Date().toISOString().split('T')[0]}`);
+      if (sheetName) {
+        const savedSheets = JSON.parse(localStorage.getItem("forgeSheets") || "{}");
+        savedSheets[sheetName] = {
+          sheet: sheet,
+          currentCP: currentCP,
+          totalCP: totalCP,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem("forgeSheets", JSON.stringify(savedSheets));
+        showSuccess(`Sheet "${sheetName}" saved!`);
+      }
     }
     
     function loadSheet(){ 
-      const data = localStorage.getItem("forgeSheet"); 
-      if(data){ 
-        sheet = JSON.parse(data); 
-        updateSheet(); 
-        showSuccess("Sheet loaded!");
+      const savedSheets = JSON.parse(localStorage.getItem("forgeSheets") || "{}");
+      const sheetNames = Object.keys(savedSheets);
+      
+      if (sheetNames.length === 0) {
+        showError("No saved sheets found!");
+        return;
+      }
+      
+      if (sheetNames.length === 1) {
+        // Only one sheet, load it directly
+        const sheetData = savedSheets[sheetNames[0]];
+        sheet = sheetData.sheet || [];
+        currentCP = sheetData.currentCP || 0;
+        totalCP = sheetData.totalCP || 0;
+        updateSheet();
+        showSuccess(`Sheet "${sheetNames[0]}" loaded!`);
+        return;
+      }
+      
+      // Multiple sheets, show selection
+      const sheetList = sheetNames.map((name, index) => {
+        const data = savedSheets[name];
+        const timestamp = new Date(data.timestamp).toLocaleString();
+        return `${index + 1}. ${name} (${data.sheet.length} perks, ${timestamp})`;
+      }).join('\n');
+      
+      const selection = prompt(`Select a sheet to load:\n\n${sheetList}\n\nEnter the number (1-${sheetNames.length}):`);
+      const index = parseInt(selection) - 1;
+      
+      if (index >= 0 && index < sheetNames.length) {
+        const selectedName = sheetNames[index];
+        const sheetData = savedSheets[selectedName];
+        sheet = sheetData.sheet || [];
+        currentCP = sheetData.currentCP || 0;
+        totalCP = sheetData.totalCP || 0;
+        updateSheet();
+        showSuccess(`Sheet "${selectedName}" loaded!`);
       } else {
-        showError("No saved sheet found!");
+        showError("Invalid selection!");
       }
     }
     
@@ -882,6 +1016,67 @@
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       showSuccess("Sheet downloaded!");
+    }
+
+    function showImportSheet() {
+      const importDiv = document.getElementById("import-sheet-input");
+      importDiv.style.display = importDiv.style.display === "none" ? "block" : "none";
+    }
+
+    async function importSheetFromFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      if (!file.name.toLowerCase().endsWith('.json')) {
+        showError("⚠️ Please select a JSON file");
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        const importedSheet = JSON.parse(text);
+        
+        if (!Array.isArray(importedSheet)) {
+          showError("⚠️ Invalid sheet format. Expected an array of perks.");
+          return;
+        }
+
+        // Validate that imported data has the expected structure
+        const validPerk = importedSheet.every(perk => 
+          perk && typeof perk === 'object' && 
+          typeof perk.name === 'string'
+        );
+        
+        if (!validPerk) {
+          showError("⚠️ Invalid sheet format. Perks must have at least a name field.");
+          return;
+        }
+
+        // Confirm before importing
+        const confirmMsg = `Import ${importedSheet.length} perk(s) from "${file.name}"? This will replace your current sheet.`;
+        if (confirm(confirmMsg)) {
+          // Refund current CP
+          const refundCP = sheet.reduce((sum, perk) => sum + (perk.cost || 0), 0);
+          currentCP += refundCP;
+          
+          // Set new sheet
+          sheet = importedSheet;
+          
+          // Deduct CP for imported perks
+          const importCost = sheet.reduce((sum, perk) => sum + (perk.cost || 0), 0);
+          currentCP -= importCost;
+          
+          updateSheet();
+          showSuccess(`Sheet imported! ${importedSheet.length} perks loaded from "${file.name}"`);
+          
+          // Hide import input
+          document.getElementById("import-sheet-input").style.display = "none";
+          input.value = ""; // Clear file input
+        }
+      } catch (err) {
+        showError(`⚠️ Error reading file: ${err.message}`);
+        console.error("Error importing sheet:", err);
+      }
     }
 
     function updateCPDisplay(){
