@@ -434,6 +434,7 @@
       <button onclick="wipeSheet()">Wipe</button>
       <button onclick="downloadSheet()">Download Sheet as JSON</button>
       <button onclick="showImportSheet()">Import Sheet JSON</button>
+      <button onclick="openConfiguration()" style="background: #64b5f6; color: #1a1a2e;">⚙️ Configuration</button>
     </div>
     <div id="import-sheet-input" style="display: none; margin-top: 1rem;">
       <input type="file" id="sheet-file-input" accept=".json" onchange="importSheetFromFile(this)">
@@ -761,12 +762,61 @@
         return;
       }
       
+      // Check settings for confirmation
+      const settings = JSON.parse(localStorage.getItem("forgeSettings") || "{}");
+      const confirmSelections = settings.confirmSelections !== false; // default true
+      
+      if (confirmSelections) {
+        showPerkPreview(perk);
+      } else {
+        addPerkToSheet(perk);
+      }
+    }
+
+    function showPerkPreview(perk) {
+      const cost = perk.cost || 0;
+      const description = perk.description || "No description available";
+      
+      let subPerkInfo = "";
+      if (perk.sub_perks && perk.sub_perks.length > 0) {
+        subPerkInfo = `\n\nSub-perks included:\n${perk.sub_perks.map(sp => `• ${sp.name} [${sp.cost || 0} CP] - ${sp.description || 'No description'}`).join('\n')}`;
+      }
+      
+      const fullInfo = `${perk.name}\nOrigin: ${perk.origin || 'Unknown'}\nCost: ${cost} CP\n\nDescription:\n${description}${subPerkInfo}\n\nAdd this perk to your sheet for ${cost} CP?`;
+      
+      if (confirm(fullInfo)) {
+        addPerkToSheet(perk);
+      }
+    }
+
+    function addPerkToSheet(perk) {
+      const cost = perk.cost || 0;
       sheet.push(perk);
       currentCP -= cost;
       updateSheet();
       updateCPDisplay();
       rerollDomains();
       showSuccess(`Added "${perk.name}" to your sheet!`);
+      
+      // Auto-save if enabled
+      const settings = JSON.parse(localStorage.getItem("forgeSettings") || "{}");
+      if (settings.autoSave !== false) { // default true
+        autoSaveSheet();
+      }
+    }
+
+    function autoSaveSheet() {
+      const lastSheetName = localStorage.getItem("lastSheetName");
+      if (lastSheetName) {
+        const savedSheets = JSON.parse(localStorage.getItem("forgeSheets") || "{}");
+        savedSheets[lastSheetName] = {
+          sheet: sheet,
+          currentCP: currentCP,
+          totalCP: totalCP,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem("forgeSheets", JSON.stringify(savedSheets));
+      }
     }
 
     function updateSheet(){
@@ -938,7 +988,22 @@
     }
 
     function saveSheet(){ 
-      const sheetName = prompt("Enter a name for this sheet:", `Sheet_${new Date().toISOString().split('T')[0]}`);
+      // Get settings to check if we should remember last sheet name
+      const settings = JSON.parse(localStorage.getItem("forgeSettings") || "{}");
+      const rememberLastSheet = settings.rememberLastSheet !== false; // default true
+      
+      // Get last used sheet name
+      const lastSheetName = localStorage.getItem("lastSheetName");
+      const defaultName = lastSheetName || `Sheet_${new Date().toISOString().split('T')[0]}`;
+      
+      let sheetName;
+      if (rememberLastSheet && lastSheetName) {
+        // Auto-save to last used name, but allow user to change
+        sheetName = prompt(`Save as "${lastSheetName}"? (or enter new name):`, lastSheetName);
+      } else {
+        sheetName = prompt("Enter a name for this sheet:", defaultName);
+      }
+      
       if (sheetName) {
         const savedSheets = JSON.parse(localStorage.getItem("forgeSheets") || "{}");
         savedSheets[sheetName] = {
@@ -948,6 +1013,7 @@
           timestamp: new Date().toISOString()
         };
         localStorage.setItem("forgeSheets", JSON.stringify(savedSheets));
+        localStorage.setItem("lastSheetName", sheetName); // Remember this name
         showSuccess(`Sheet "${sheetName}" saved!`);
       }
     }
@@ -1208,6 +1274,10 @@
           }, '*');
         }
       });
+    }
+
+    function openConfiguration() {
+      window.open('config.html', '_blank');
     }
 
     // Add CSS animation for success notifications
