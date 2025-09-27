@@ -1626,8 +1626,15 @@
             document.getElementById('edit-perk-primary').checked = isPrimary;
             toggleSubPerksSection(isPrimary);
             
+            // Always update sub-perks display, even if empty
             if (isPrimary) {
                 displayCurrentSubPerks(perk.sub_perks || []);
+            } else {
+                // Clear sub-perks display for non-primary perks
+                const container = document.getElementById('current-sub-perks');
+                if (container) {
+                    container.innerHTML = '<em>No sub-perks added yet</em>';
+                }
             }
             
             // Scroll to form
@@ -1647,6 +1654,12 @@
                 // Clear sub-perk search
                 document.getElementById('sub-perk-search').value = '';
                 document.getElementById('sub-perk-results').style.display = 'none';
+                
+                // Clear current sub-perks display when hiding section
+                const container = document.getElementById('current-sub-perks');
+                if (container) {
+                    container.innerHTML = '<em>No sub-perks added yet</em>';
+                }
             }
         }
 
@@ -1874,6 +1887,16 @@
             document.getElementById('edit-perk-origin').value = '';
             document.getElementById('edit-perk-cost').value = '';
             document.getElementById('edit-perk-description').value = '';
+            
+            // Clear Primary Perk checkbox and sub-perks section
+            document.getElementById('edit-perk-primary').checked = false;
+            toggleSubPerksSection(false);
+            
+            // Clear sub-perks display
+            const container = document.getElementById('current-sub-perks');
+            if (container) {
+                container.innerHTML = '<em>No sub-perks added yet</em>';
+            }
         }
 
         // Perk Compiler Functions

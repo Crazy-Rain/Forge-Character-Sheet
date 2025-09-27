@@ -577,7 +577,16 @@
         const canAfford = cost <= currentCP;
         const costColor = canAfford ? "#4f4" : "#f55";
         
-        div.innerHTML = `<b>${p.name}</b> (${p.origin||"Unknown"}) [<span style="color:${costColor}">${cost} CP</span>]<br>${p.description}`;
+        // Handle Primary Perks differently
+        let displayName = p.name;
+        let displayDescription = p.description;
+        
+        if (p.is_primary && p.sub_perks && p.sub_perks.length > 0) {
+          displayName += ' <span style="color: #ffb74d; font-size: 0.8em;">(Primary)</span>';
+          displayDescription = `<em>Primary Perk - Includes ${p.sub_perks.length} sub-perk(s)</em>`;
+        }
+        
+        div.innerHTML = `<b>${displayName}</b> (${p.origin||"Unknown"}) [<span style="color:${costColor}">${cost} CP</span>]<br>${displayDescription}`;
         
         if (!canAfford) {
           div.style.opacity = "0.6";
@@ -611,7 +620,16 @@
       sheet.forEach((p, idx)=>{
         const div = document.createElement("div");
         div.className = "sheet-entry";
-        div.innerHTML = `<b>${p.name}</b> (${p.origin||"Unknown"}) [${p.cost} CP]<br>${p.description}`;
+        // Handle Primary Perks in sheet display
+        let sheetName = p.name;
+        let sheetDescription = p.description;
+        
+        if (p.is_primary && p.sub_perks && p.sub_perks.length > 0) {
+          sheetName += ' <span style="color: #ffb74d; font-size: 0.8em;">(Primary)</span>';
+          sheetDescription = `<em>Primary Perk - Includes ${p.sub_perks.length} sub-perk(s)</em>`;
+        }
+        
+        div.innerHTML = `<b>${sheetName}</b> (${p.origin||"Unknown"}) [${p.cost} CP]<br>${sheetDescription}`;
         // If parent has sub-perks, list them for clarity (the purchase conceptually includes them)
         if(p.sub_perks && p.sub_perks.length){
           const ul = document.createElement("ul");
