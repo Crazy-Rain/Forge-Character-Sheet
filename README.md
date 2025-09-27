@@ -12,6 +12,8 @@ A comprehensive character sheet system for Celestial Forge roleplay, featuring a
 - **Sheet Export**: Generates formatted output for AI responses
 - **Persistent Storage**: Saves progress locally
 - **Modern UI**: Dark theme with responsive design
+- **Cross-Platform Compatible**: Works in all environments including Termux, mobile browsers, and restricted sandboxes
+- **Integrated Configuration**: Built-in modal configuration panel (no popup windows required)
 
 ## 🚀 Quick Start
 
@@ -58,6 +60,15 @@ A comprehensive character sheet system for Celestial Forge roleplay, featuring a
    Total Perks: X
    <hr>
    ```
+
+### Configuration & Management
+Click the **⚙️ Configuration** button to access the integrated modal with:
+- **Perk Browser**: Search and explore 2,800+ perks across 40 domains
+- **Sheet Manager**: Save, load, export, and manage multiple character sheets
+- **Import/Export**: Import/export sheets, perks database, and settings
+- **Settings**: Configure auto-save, confirmations, and display preferences
+
+*Note: The configuration modal works in all environments, including mobile devices and restricted environments like Termux where popup windows may fail.*
 
 ## 🔧 Integration Options
 

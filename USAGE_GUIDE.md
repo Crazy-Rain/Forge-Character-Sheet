@@ -54,7 +54,7 @@ npm install && npm start
 **Domain Categories Include**:
 - Assistants (helpers, companions, AI)
 - Breeding (genetics, reproduction)
-- Crafting - Artisan (artistic creation)
+- Crafting - Artisan (artistic creation)  
 - Databases - Magical (knowledge repositories)
 - Facilities - Magical (workshops, labs)
 - Knowledge - Reverse Engineering
@@ -64,7 +64,40 @@ npm install && npm start
 - Vehicles (transportation, mechs)
 - And many more...
 
-### 3. Sheet Management
+### 3. Configuration & Advanced Features
+
+**Access the Configuration Modal**: Click the **⚙️ Configuration** button to open an integrated modal with advanced features:
+
+**🔍 Perk Browser**:
+- Browse all 2,800+ perks across 40 domains
+- Filter by domain or search by name/description
+- View detailed perk information and costs
+- Add perks directly to your sheet (if affordable)
+
+**📋 Sheet Manager**:
+- Save multiple character sheets with custom names
+- Load previously saved sheets
+- Export sheets as JSON files
+- Delete unwanted sheets
+- View sheet metadata (perk count, CP spent, save date)
+
+**📥📤 Import/Export**:
+- Export current sheet (JSON or formatted text)
+- Export entire perks database
+- Export application settings
+- Import sheets from JSON files
+- Import custom perks databases
+- Import settings configurations
+
+**⚙️ Settings**:
+- Auto-save sheets every 30 seconds
+- Confirm perk selections before adding
+- Show/hide full perk descriptions
+- Remember last saved sheet name
+
+*Note: The configuration modal works in all environments, including mobile devices and restricted environments like Termux where popup windows typically fail.*
+
+### 4. Sheet Management
 
 **View Current Sheet**:
 - See all selected perks with details

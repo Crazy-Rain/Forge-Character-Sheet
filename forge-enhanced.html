@@ -355,6 +355,294 @@
       margin-bottom: 1rem;
       padding: 1rem;
     }
+    
+    /* Configuration Modal Styles */
+    .config-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+    }
+    
+    .config-modal-content {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      margin: 2% auto;
+      padding: 0;
+      border: 2px solid #64b5f6;
+      border-radius: 12px;
+      width: 95%;
+      max-width: 1200px;
+      height: 90%;
+      position: relative;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+    
+    .config-modal-header {
+      background: linear-gradient(135deg, #64b5f6, #42a5f5);
+      color: #1a1a2e;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #42a5f5;
+    }
+    
+    .config-modal-header h2 {
+      margin: 0;
+      font-size: 1.5em;
+      text-shadow: none;
+      color: #1a1a2e;
+    }
+    
+    .config-close {
+      background: transparent;
+      border: none;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #1a1a2e;
+      padding: 0;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .config-close:hover {
+      background: rgba(26, 26, 46, 0.2);
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .config-modal-body {
+      padding: 20px;
+      height: calc(100% - 80px);
+      overflow-y: auto;
+      color: #e0e0e0;
+    }
+    
+    .config-nav-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .config-nav-buttons button {
+      background: #424242;
+      color: #e0e0e0;
+      border: 1px solid #64b5f6;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .config-nav-buttons button:hover,
+    .config-nav-buttons button.active {
+      background: #64b5f6;
+      color: #1a1a2e;
+    }
+    
+    .config-tab-content {
+      display: none;
+    }
+    
+    .config-tab-content.active {
+      display: block;
+    }
+    
+    .config-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .config-panel h3 {
+      color: #64b5f6;
+      margin-top: 0;
+      border-bottom: 2px solid #64b5f6;
+      padding-bottom: 8px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid rgba(100, 181, 246, 0.3);
+    }
+    
+    .stat-number {
+      font-size: 2em;
+      font-weight: bold;
+      color: #64b5f6;
+    }
+    
+    .stat-label {
+      font-size: 0.9em;
+      color: #c0c0c0;
+      margin-top: 5px;
+    }
+    
+    .search-box, .config-select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #64b5f6;
+      border-radius: 5px;
+      color: #e0e0e0;
+      font-size: 1em;
+    }
+    
+    .search-box::placeholder {
+      color: #888;
+    }
+    
+    .config-perk-list {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #424242;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+    
+    .config-perk-item {
+      padding: 10px;
+      border-bottom: 1px solid #424242;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .config-perk-item:hover {
+      background: rgba(100, 181, 246, 0.1);
+    }
+    
+    .config-perk-item:last-child {
+      border-bottom: none;
+    }
+    
+    .config-perk-name {
+      font-weight: bold;
+      color: #64b5f6;
+      margin-bottom: 5px;
+    }
+    
+    .config-perk-origin {
+      color: #81c784;
+      font-size: 0.9em;
+      margin-bottom: 3px;
+    }
+    
+    .config-perk-cost {
+      color: #ffb74d;
+      font-weight: bold;
+    }
+    
+    .sheet-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #424242;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+    
+    .sheet-item {
+      padding: 10px;
+      border-bottom: 1px solid #424242;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .sheet-item:last-child {
+      border-bottom: none;
+    }
+    
+    .sheet-info {
+      flex-grow: 1;
+    }
+    
+    .sheet-actions {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .sheet-actions button {
+      padding: 5px 10px;
+      font-size: 0.8em;
+    }
+    
+    .config-file-input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #64b5f6;
+      border-radius: 5px;
+      color: #e0e0e0;
+    }
+    
+    .config-checkbox-group {
+      margin: 15px 0;
+    }
+    
+    .config-checkbox-group label {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    
+    .config-checkbox-group input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    
+    .danger {
+      background: linear-gradient(135deg, #f44336, #d32f2f) !important;
+    }
+    
+    .danger:hover {
+      background: linear-gradient(135deg, #d32f2f, #c62828) !important;
+    }
+    
+    .config-success {
+      background: #4caf50;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+    
+    .config-error {
+      background: #f44336;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -461,6 +749,125 @@
     <div class="row">
       <button onclick="hideAIPreview()">Close Preview</button>
       <button onclick="copyAIPreview()">Copy Preview</button>
+    </div>
+  </div>
+
+  <!-- Configuration Modal -->
+  <div id="config-modal" class="config-modal">
+    <div class="config-modal-content">
+      <div class="config-modal-header">
+        <h2>⚙️ Celestial Forge Configuration</h2>
+        <button class="config-close" onclick="closeConfiguration()">&times;</button>
+      </div>
+      <div class="config-modal-body">
+        <div class="config-nav-buttons">
+          <button onclick="showConfigTab('perk-browser')" class="active" id="tab-perk-browser">Perk Browser</button>
+          <button onclick="showConfigTab('sheet-manager')" id="tab-sheet-manager">Sheet Manager</button>
+          <button onclick="showConfigTab('import-export')" id="tab-import-export">Import/Export</button>
+          <button onclick="showConfigTab('settings')" id="tab-settings">Settings</button>
+        </div>
+
+        <div class="config-success" id="config-success-message"></div>
+        <div class="config-error" id="config-error-message"></div>
+
+        <!-- Perk Browser Tab -->
+        <div id="config-perk-browser" class="config-tab-content active">
+          <div class="config-panel">
+            <h3>🔍 Perk Database Browser</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number" id="config-total-perks">-</div>
+                <div class="stat-label">Total Perks</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="config-total-domains">-</div>
+                <div class="stat-label">Domains</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="config-affordable-perks">-</div>
+                <div class="stat-label">Affordable (Current CP)</div>
+              </div>
+            </div>
+            
+            <select id="config-domain-filter" class="config-select" onchange="configFilterPerks()">
+              <option value="">All Domains</option>
+            </select>
+            
+            <input type="text" class="search-box" id="config-perk-search" placeholder="Search perks by name or description..." oninput="configFilterPerks()">
+            
+            <div class="config-perk-list" id="config-perk-list"></div>
+          </div>
+        </div>
+
+        <!-- Sheet Manager Tab -->
+        <div id="config-sheet-manager" class="config-tab-content">
+          <div class="config-panel">
+            <h3>📋 Sheet Manager</h3>
+            <div class="sheet-list" id="config-sheet-list"></div>
+            <div style="margin-top: 15px;">
+              <button onclick="configRefreshSheetList()">Refresh</button>
+              <button onclick="configExportAllSheets()">Export All Sheets</button>
+              <button class="danger" onclick="configClearAllSheets()">Clear All Sheets</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Import/Export Tab -->
+        <div id="config-import-export" class="config-tab-content">
+          <div class="config-panel">
+            <h3>📤 Export Options</h3>
+            <button onclick="configExportCurrentSheet()">Export Current Sheet (JSON)</button>
+            <button onclick="configExportCurrentSheetFormatted()">Export Current Sheet (Formatted)</button>
+            <button onclick="configExportPerksDatabase()">Export Perks Database</button>
+            <button onclick="configExportSettings()">Export Settings</button>
+          </div>
+          
+          <div class="config-panel">
+            <h3>📥 Import Options</h3>
+            <div>
+              <label>Import Sheet:</label>
+              <input type="file" class="config-file-input" id="config-import-sheet" accept=".json" onchange="configImportSheet(this)">
+            </div>
+            <div style="margin-top: 15px;">
+              <label>Import Perks Database:</label>
+              <input type="file" class="config-file-input" id="config-import-perks" accept=".json" onchange="configImportPerks(this)">
+            </div>
+            <div style="margin-top: 15px;">
+              <label>Import Settings:</label>
+              <input type="file" class="config-file-input" id="config-import-settings" accept=".json" onchange="configImportSettings(this)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="config-settings" class="config-tab-content">
+          <div class="config-panel">
+            <h3>⚙️ Application Settings</h3>
+            <div class="config-checkbox-group">
+              <label>
+                <input type="checkbox" id="config-auto-save" checked>
+                Auto-save sheets every 30 seconds
+              </label>
+              <label>
+                <input type="checkbox" id="config-confirm-selections" checked>
+                Confirm perk selections
+              </label>
+              <label>
+                <input type="checkbox" id="config-show-descriptions" checked>
+                Show full perk descriptions
+              </label>
+              <label>
+                <input type="checkbox" id="config-remember-last-sheet" checked>
+                Remember last saved sheet name
+              </label>
+            </div>
+            <div style="margin-top: 20px;">
+              <button onclick="configSaveSettings()">Save Settings</button>
+              <button onclick="configResetSettings()">Reset to Defaults</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1276,8 +1683,525 @@
       });
     }
 
+    // Configuration Modal Functions
     function openConfiguration() {
-      window.open('config.html', '_blank');
+      document.getElementById('config-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      initializeConfigurationData();
+    }
+
+    function closeConfiguration() {
+      document.getElementById('config-modal').style.display = 'none';
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    function showConfigTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.config-tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Remove active from all nav buttons
+      document.querySelectorAll('.config-nav-buttons button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Show selected tab
+      document.getElementById('config-' + tabName).classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    function initializeConfigurationData() {
+      configLoadCurrentSheetData();
+      configPopulateDomainFilter();
+      configUpdateStats();
+      configRefreshSheetList();
+      configLoadSettings();
+    }
+
+    function configLoadCurrentSheetData() {
+      // This data is already loaded in the main application
+      // Just update the display
+      configUpdateStats();
+    }
+
+    function configPopulateDomainFilter() {
+      const select = document.getElementById('config-domain-filter');
+      select.innerHTML = '<option value="">All Domains</option>';
+      
+      if (perksData && typeof perksData === 'object') {
+        Object.keys(perksData).sort().forEach(domain => {
+          const option = document.createElement('option');
+          option.value = domain;
+          option.textContent = domain;
+          select.appendChild(option);
+        });
+      }
+    }
+
+    function configUpdateStats() {
+      if (!perksData || typeof perksData !== 'object') {
+        document.getElementById('config-total-perks').textContent = '0';
+        document.getElementById('config-total-domains').textContent = '0';
+        document.getElementById('config-affordable-perks').textContent = '0';
+        return;
+      }
+
+      const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+      const totalDomains = Object.keys(perksData).length;
+      const affordablePerks = Object.values(perksData).reduce((sum, perks) => {
+        return sum + perks.filter(perk => (perk.cost || 0) <= currentCP).length;
+      }, 0);
+
+      document.getElementById('config-total-perks').textContent = totalPerks.toLocaleString();
+      document.getElementById('config-total-domains').textContent = totalDomains;
+      document.getElementById('config-affordable-perks').textContent = affordablePerks.toLocaleString();
+    }
+
+    function configFilterPerks() {
+      const searchTerm = document.getElementById('config-perk-search').value.toLowerCase();
+      const domainFilter = document.getElementById('config-domain-filter').value;
+      configDisplayPerks(searchTerm, domainFilter);
+    }
+
+    function configDisplayPerks(searchTerm = '', domainFilter = '') {
+      const perkList = document.getElementById('config-perk-list');
+      perkList.innerHTML = '';
+
+      if (!perksData || typeof perksData !== 'object') {
+        perkList.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">No perks data loaded</div>';
+        return;
+      }
+
+      let foundPerks = [];
+      const domains = domainFilter ? [domainFilter] : Object.keys(perksData);
+
+      domains.forEach(domain => {
+        if (perksData[domain]) {
+          perksData[domain].forEach(perk => {
+            const matchesSearch = !searchTerm || 
+              perk.name.toLowerCase().includes(searchTerm) || 
+              (perk.description && perk.description.toLowerCase().includes(searchTerm));
+            
+            if (matchesSearch) {
+              foundPerks.push({ ...perk, domain });
+            }
+          });
+        }
+      });
+
+      if (foundPerks.length === 0) {
+        perkList.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">No perks found matching your criteria</div>';
+        return;
+      }
+
+      // Sort by cost, then by name
+      foundPerks.sort((a, b) => {
+        const costDiff = (a.cost || 0) - (b.cost || 0);
+        return costDiff !== 0 ? costDiff : a.name.localeCompare(b.name);
+      });
+
+      foundPerks.slice(0, 100).forEach(perk => { // Limit to 100 for performance
+        const perkElement = configCreatePerkElement(perk, perk.domain);
+        perkList.appendChild(perkElement);
+      });
+
+      if (foundPerks.length > 100) {
+        const moreElement = document.createElement('div');
+        moreElement.style.padding = '10px';
+        moreElement.style.textAlign = 'center';
+        moreElement.style.color = '#888';
+        moreElement.textContent = `... and ${foundPerks.length - 100} more. Try refining your search.`;
+        perkList.appendChild(moreElement);
+      }
+    }
+
+    function configCreatePerkElement(perk, domain) {
+      const perkElement = document.createElement('div');
+      perkElement.className = 'config-perk-item';
+      
+      const affordable = (perk.cost || 0) <= currentCP;
+      const costColor = affordable ? '#4caf50' : '#f44336';
+      
+      perkElement.innerHTML = `
+        <div class="config-perk-name">${perk.name}</div>
+        <div class="config-perk-origin">${domain}</div>
+        <div class="config-perk-cost" style="color: ${costColor};">${perk.cost || 0} CP</div>
+      `;
+      
+      perkElement.onclick = () => configShowPerkModal(perk, domain);
+      
+      return perkElement;
+    }
+
+    function configShowPerkModal(perk, domain) {
+      const affordable = (perk.cost || 0) <= currentCP;
+      const addButtonText = affordable ? 'Add to Sheet' : 'Cannot Afford';
+      
+      const modal = confirm(`${perk.name}\nDomain: ${domain}\nCost: ${perk.cost || 0} CP\n\n${perk.description || 'No description available'}\n\nAdd this perk to your sheet?`);
+      
+      if (modal && affordable) {
+        addPerk(perk, domain);
+        configShowSuccess(`Added "${perk.name}" to your sheet!`);
+        configUpdateStats();
+      } else if (modal && !affordable) {
+        configShowError('Insufficient CP to add this perk!');
+      }
+    }
+
+    // Sheet Manager Functions
+    function configRefreshSheetList() {
+      const sheetList = document.getElementById('config-sheet-list');
+      sheetList.innerHTML = '';
+      
+      const savedSheets = JSON.parse(localStorage.getItem('forgeSheets') || '{}');
+      
+      if (Object.keys(savedSheets).length === 0) {
+        sheetList.innerHTML = '<div style="text-align: center; padding: 20px; color: #888;">No saved sheets found</div>';
+        return;
+      }
+      
+      Object.entries(savedSheets).forEach(([name, data]) => {
+        const sheetItem = document.createElement('div');
+        sheetItem.className = 'sheet-item';
+        
+        const timestamp = new Date(data.timestamp).toLocaleString();
+        const perkCount = data.sheet ? data.sheet.length : 0;
+        const cpSpent = data.sheet ? data.sheet.reduce((sum, p) => sum + (p.cost || 0), 0) : 0;
+        
+        sheetItem.innerHTML = `
+          <div class="sheet-info">
+            <div style="font-weight: bold; color: #64b5f6;">${name}</div>
+            <div style="font-size: 0.9em; color: #c0c0c0;">
+              ${perkCount} perks, ${cpSpent} CP spent, saved ${timestamp}
+            </div>
+          </div>
+          <div class="sheet-actions">
+            <button onclick="configLoadSheet('${name}')">Load</button>
+            <button onclick="configExportSheet('${name}')">Export</button>
+            <button class="danger" onclick="configDeleteSheet('${name}')">Delete</button>
+          </div>
+        `;
+        
+        sheetList.appendChild(sheetItem);
+      });
+    }
+
+    function configLoadSheet(name) {
+      const savedSheets = JSON.parse(localStorage.getItem('forgeSheets') || '{}');
+      const sheetData = savedSheets[name];
+      
+      if (!sheetData) {
+        configShowError('Sheet not found!');
+        return;
+      }
+      
+      // Load into current sheet
+      sheet = sheetData.sheet || [];
+      currentCP = sheetData.currentCP || 0;
+      totalCP = sheetData.totalCP || 0;
+      
+      updateSheet();
+      updateCPDisplay();
+      saveSheet(); // Save to current storage
+      saveCPData();
+      
+      configShowSuccess(`Sheet "${name}" loaded!`);
+      configUpdateStats();
+    }
+
+    function configExportSheet(name) {
+      const savedSheets = JSON.parse(localStorage.getItem('forgeSheets') || '{}');
+      const sheetData = savedSheets[name];
+      
+      if (!sheetData) {
+        configShowError('Sheet not found!');
+        return;
+      }
+      
+      const dataStr = JSON.stringify(sheetData, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${name}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      configShowSuccess(`Sheet "${name}" exported!`);
+    }
+
+    function configDeleteSheet(name) {
+      if (!confirm(`Are you sure you want to delete the sheet "${name}"? This cannot be undone.`)) {
+        return;
+      }
+      
+      const savedSheets = JSON.parse(localStorage.getItem('forgeSheets') || '{}');
+      delete savedSheets[name];
+      localStorage.setItem('forgeSheets', JSON.stringify(savedSheets));
+      
+      configShowSuccess(`Sheet "${name}" deleted!`);
+      configRefreshSheetList();
+    }
+
+    // Import/Export Functions
+    function configExportCurrentSheet() {
+      const exportData = {
+        sheet: sheet,
+        currentCP: currentCP,
+        totalCP: totalCP,
+        timestamp: new Date().toISOString()
+      };
+      
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'current-sheet.json';
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      configShowSuccess('Current sheet exported!');
+    }
+
+    function configExportCurrentSheetFormatted() {
+      const exportText = document.getElementById('export').value;
+      if (!exportText) {
+        configShowError('No sheet data to export!');
+        return;
+      }
+      
+      const dataBlob = new Blob([exportText], {type: 'text/plain'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'formatted-sheet.txt';
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      configShowSuccess('Formatted sheet exported!');
+    }
+
+    function configExportPerksDatabase() {
+      if (!perksData) {
+        configShowError('No perks database to export!');
+        return;
+      }
+      
+      const dataStr = JSON.stringify(perksData, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'perks-database.json';
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      configShowSuccess('Perks database exported!');
+    }
+
+    function configExportSettings() {
+      const settings = {
+        autoSave: document.getElementById('config-auto-save').checked,
+        confirmSelections: document.getElementById('config-confirm-selections').checked,
+        showDescriptions: document.getElementById('config-show-descriptions').checked,
+        rememberLastSheet: document.getElementById('config-remember-last-sheet').checked
+      };
+      
+      const dataStr = JSON.stringify(settings, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'forge-settings.json';
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      configShowSuccess('Settings exported!');
+    }
+
+    function configExportAllSheets() {
+      const savedSheets = JSON.parse(localStorage.getItem('forgeSheets') || '{}');
+      
+      if (Object.keys(savedSheets).length === 0) {
+        configShowError('No saved sheets to export!');
+        return;
+      }
+      
+      const dataStr = JSON.stringify(savedSheets, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'all-sheets.json';
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      configShowSuccess('All sheets exported!');
+    }
+
+    function configClearAllSheets() {
+      if (!confirm('Are you sure you want to delete ALL saved sheets? This cannot be undone!')) {
+        return;
+      }
+      
+      localStorage.removeItem('forgeSheets');
+      configShowSuccess('All sheets cleared!');
+      configRefreshSheetList();
+    }
+
+    async function configImportSheet(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        
+        // Validate the data structure
+        if (!data.sheet || !Array.isArray(data.sheet)) {
+          throw new Error('Invalid sheet format');
+        }
+        
+        // Import the sheet
+        sheet = data.sheet;
+        currentCP = data.currentCP || 0;
+        totalCP = data.totalCP || 0;
+        
+        updateSheet();
+        updateCPDisplay();
+        saveSheet();
+        saveCPData();
+        
+        configShowSuccess('Sheet imported successfully!');
+        configUpdateStats();
+      } catch (error) {
+        configShowError(`Import failed: ${error.message}`);
+      }
+      
+      input.value = ''; // Clear the input
+    }
+
+    async function configImportPerks(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        
+        // Validate that it's a perks database
+        if (typeof data !== 'object' || !Object.keys(data).length) {
+          throw new Error('Invalid perks database format');
+        }
+        
+        // Import the perks
+        perksData = data;
+        
+        configPopulateDomainFilter();
+        configUpdateStats();
+        configDisplayPerks();
+        
+        configShowSuccess('Perks database imported successfully!');
+      } catch (error) {
+        configShowError(`Import failed: ${error.message}`);
+      }
+      
+      input.value = ''; // Clear the input
+    }
+
+    async function configImportSettings(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      try {
+        const text = await file.text();
+        const settings = JSON.parse(text);
+        
+        // Apply the settings
+        if (settings.hasOwnProperty('autoSave')) {
+          document.getElementById('config-auto-save').checked = settings.autoSave;
+        }
+        if (settings.hasOwnProperty('confirmSelections')) {
+          document.getElementById('config-confirm-selections').checked = settings.confirmSelections;
+        }
+        if (settings.hasOwnProperty('showDescriptions')) {
+          document.getElementById('config-show-descriptions').checked = settings.showDescriptions;
+        }
+        if (settings.hasOwnProperty('rememberLastSheet')) {
+          document.getElementById('config-remember-last-sheet').checked = settings.rememberLastSheet;
+        }
+        
+        configSaveSettings();
+        configShowSuccess('Settings imported successfully!');
+      } catch (error) {
+        configShowError(`Import failed: ${error.message}`);
+      }
+      
+      input.value = ''; // Clear the input
+    }
+
+    // Settings Functions
+    function configLoadSettings() {
+      const settings = JSON.parse(localStorage.getItem('forgeSettings') || '{}');
+      
+      document.getElementById('config-auto-save').checked = settings.autoSave !== false;
+      document.getElementById('config-confirm-selections').checked = settings.confirmSelections !== false;
+      document.getElementById('config-show-descriptions').checked = settings.showDescriptions !== false;
+      document.getElementById('config-remember-last-sheet').checked = settings.rememberLastSheet !== false;
+    }
+
+    function configSaveSettings() {
+      const settings = {
+        autoSave: document.getElementById('config-auto-save').checked,
+        confirmSelections: document.getElementById('config-confirm-selections').checked,
+        showDescriptions: document.getElementById('config-show-descriptions').checked,
+        rememberLastSheet: document.getElementById('config-remember-last-sheet').checked
+      };
+      
+      localStorage.setItem('forgeSettings', JSON.stringify(settings));
+      configShowSuccess('Settings saved!');
+    }
+
+    function configResetSettings() {
+      if (!confirm('Reset all settings to defaults?')) {
+        return;
+      }
+      
+      document.getElementById('config-auto-save').checked = true;
+      document.getElementById('config-confirm-selections').checked = true;
+      document.getElementById('config-show-descriptions').checked = true;
+      document.getElementById('config-remember-last-sheet').checked = true;
+      
+      configSaveSettings();
+    }
+
+    // Utility Functions
+    function configShowSuccess(message) {
+      const element = document.getElementById('config-success-message');
+      element.textContent = message;
+      element.style.display = 'block';
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 3000);
+    }
+
+    function configShowError(message) {
+      const element = document.getElementById('config-error-message');
+      element.textContent = message;
+      element.style.display = 'block';
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 5000);
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('config-modal');
+      if (event.target === modal) {
+        closeConfiguration();
+      }
     }
 
     // Add CSS animation for success notifications
