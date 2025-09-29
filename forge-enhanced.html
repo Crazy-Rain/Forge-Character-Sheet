@@ -945,15 +945,20 @@
 
     async function loadData(){
       try {
-        console.log("Attempting to load perks.json...");
+        console.log("🔄 Loading perks data from perks.json...");
         const res = await fetch("perks.json");
         if(!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         const rawData = await res.json();
         perksData = processPerksData(rawData);
-        console.log("Perks data loaded successfully");
+        
+        // Log successful load with data summary
+        const domainCount = Object.keys(perksData).length;
+        const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+        console.log(`✅ Successfully loaded and processed perks.json: ${domainCount} domains, ${totalPerks} total perks`);
+        
         onDataLoadSuccess();
       } catch (err) {
-        console.error("Error loading perks.json:", err);
+        console.error("❌ Error loading perks.json:", err);
         handleLoadError(err);
       }
     }
@@ -1031,14 +1036,19 @@
     function onDataLoadSuccess() {
       // Hide loading panel if it was shown
       document.getElementById("data-loading-panel").style.display = "none";
+      
+      // Show success message with data summary
+      const domainCount = Object.keys(perksData).length;
+      const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+      showSuccess(`✅ perks.json loaded successfully: ${domainCount} domains, ${totalPerks} perks`);
+      
       rerollDomains();
       loadCPData();
       loadSheet();
-      showSuccess("✅ Perks data loaded successfully!");
     }
 
     function handleLoadError(err) {
-      const errorMsg = `⚠️ Could not load perks.json automatically.\nError: ${err.message}\n\nPossible solutions:`;
+      const errorMsg = `⚠️ Could not load perks.json from the main directory.\nError: ${err.message}\n\nThis means the application cannot access the official perks database. Try these solutions:`;
       showError(errorMsg);
       document.getElementById("data-loading-panel").style.display = "block";
     }
@@ -1066,11 +1076,22 @@
         const text = await file.text();
         const data = JSON.parse(text);
         perksData = data;
-        console.log("Perks data loaded from file:", file.name);
-        onDataLoadSuccess();
+        
+        // Log and update success messaging for manual file load
+        const domainCount = Object.keys(perksData).length;
+        const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+        console.log(`✅ Perks data loaded manually from file: ${file.name} (${domainCount} domains, ${totalPerks} perks)`);
+        
+        // Hide loading panel and show success
+        document.getElementById("data-loading-panel").style.display = "none";
+        showSuccess(`✅ Perks loaded from file "${file.name}": ${domainCount} domains, ${totalPerks} perks`);
+        
+        rerollDomains();
+        loadCPData();
+        loadSheet();
       } catch (err) {
         showError(`⚠️ Error reading file: ${err.message}`);
-        console.error("Error loading from file:", err);
+        console.error("❌ Error loading from file:", err);
       }
     }
 
@@ -1086,11 +1107,22 @@
       try {
         const data = JSON.parse(jsonText);
         perksData = data;
-        console.log("Perks data loaded from pasted content");
-        onDataLoadSuccess();
+        
+        // Log and update success messaging for pasted data
+        const domainCount = Object.keys(perksData).length;
+        const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+        console.log(`✅ Perks data loaded from pasted JSON content (${domainCount} domains, ${totalPerks} perks)`);
+        
+        // Hide loading panel and show success
+        document.getElementById("data-loading-panel").style.display = "none";
+        showSuccess(`✅ Perks loaded from pasted JSON: ${domainCount} domains, ${totalPerks} perks`);
+        
+        rerollDomains();
+        loadCPData();
+        loadSheet();
       } catch (err) {
         showError(`⚠️ Invalid JSON data: ${err.message}`);
-        console.error("Error parsing pasted JSON:", err);
+        console.error("❌ Error parsing pasted JSON:", err);
       }
     }
 
@@ -2139,11 +2171,20 @@
         // Import the perks
         perksData = data;
         
+        // Log and show success message with data summary
+        const domainCount = Object.keys(perksData).length;
+        const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+        console.log(`✅ Successfully imported perks database manually: ${domainCount} domains, ${totalPerks} total perks`);
+        
         configPopulateDomainFilter();
         configUpdateStats();
         configDisplayPerks();
         
-        configShowSuccess('Perks database imported successfully!');
+        // Show success message indicating manual import
+        configShowSuccess(`✅ Perks database imported manually: ${domainCount} domains, ${totalPerks} perks`);
+        
+        // Also update the main status area
+        showSuccess(`✅ Perks database manually imported: ${domainCount} domains, ${totalPerks} perks`);
       } catch (error) {
         configShowError(`Import failed: ${error.message}`);
       }
