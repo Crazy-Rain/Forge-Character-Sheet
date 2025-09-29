@@ -945,15 +945,20 @@
 
     async function loadData(){
       try {
-        console.log("Attempting to load perks.json...");
+        console.log("🔄 Loading perks data from perks.json...");
         const res = await fetch("perks.json");
         if(!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         const rawData = await res.json();
         perksData = processPerksData(rawData);
-        console.log("Perks data loaded successfully");
+        
+        // Log successful load with data summary
+        const domainCount = Object.keys(perksData).length;
+        const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+        console.log(`✅ Successfully loaded and processed perks.json: ${domainCount} domains, ${totalPerks} total perks`);
+        
         onDataLoadSuccess();
       } catch (err) {
-        console.error("Error loading perks.json:", err);
+        console.error("❌ Error loading perks.json:", err);
         handleLoadError(err);
       }
     }
@@ -1031,14 +1036,19 @@
     function onDataLoadSuccess() {
       // Hide loading panel if it was shown
       document.getElementById("data-loading-panel").style.display = "none";
+      
+      // Show success message with data summary
+      const domainCount = Object.keys(perksData).length;
+      const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+      showSuccess(`✅ perks.json loaded successfully: ${domainCount} domains, ${totalPerks} perks`);
+      
       rerollDomains();
       loadCPData();
       loadSheet();
-      showSuccess("✅ Perks data loaded successfully!");
     }
 
     function handleLoadError(err) {
-      const errorMsg = `⚠️ Could not load perks.json automatically.\nError: ${err.message}\n\nPossible solutions:`;
+      const errorMsg = `⚠️ Could not load perks.json from the main directory.\nError: ${err.message}\n\nThis means the application cannot access the official perks database. Try these solutions:`;
       showError(errorMsg);
       document.getElementById("data-loading-panel").style.display = "block";
     }

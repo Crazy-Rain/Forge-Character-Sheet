@@ -482,9 +482,23 @@
 
     async function loadData(){
       try {
+        console.log("🔄 Loading perks data from perks.json...");
         const res = await fetch("perks.json");
         if(!res.ok) throw new Error("HTTP " + res.status);
         perksData = await res.json();
+        
+        // Log successful load with data summary
+        const domainCount = Object.keys(perksData).length;
+        const totalPerks = Object.values(perksData).reduce((sum, perks) => sum + perks.length, 0);
+        console.log(`✅ Successfully loaded perks.json: ${domainCount} domains, ${totalPerks} total perks`);
+        
+        // Show brief success message
+        const successMsg = document.createElement("div");
+        successMsg.innerHTML = `✅ <strong>perks.json loaded:</strong> ${domainCount} domains, ${totalPerks} perks`;
+        successMsg.style.cssText = "background: #0a5c2a; color: #4ade80; padding: 8px; margin: 8px 0; border-radius: 4px; font-size: 0.9em;";
+        document.body.insertBefore(successMsg, document.body.firstChild);
+        setTimeout(() => successMsg.remove(), 4000);
+        
         rerollDomains();
       } catch (err) {
         document.getElementById("error-box").innerHTML =
@@ -493,7 +507,7 @@
           "Please run a local server instead:<br><br>" +
           "<code>python -m http.server 8000</code><br>" +
           "Then open <a href='http://localhost:8000/forge.html'>http://localhost:8000/forge.html</a>";
-        console.error("Error loading perks.json:", err);
+        console.error("❌ Error loading perks.json:", err);
       }
     }
 
